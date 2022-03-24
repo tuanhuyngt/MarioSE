@@ -46,10 +46,10 @@ HWND hWnd = 0;
 // Each color is from 0.0f to 1.0f  ( 0/255 to 255/255 ) 
 #define BACKGROUND_COLOR D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.2f)
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
+#define WINDOW_WIDTH 940
+#define WINDOW_HEIGHT 680
 
-#define MAX_FRAME_RATE 100
+#define MAX_FRAME_RATE 200
 
 ID3D10Device* pD3DDevice = NULL;
 IDXGISwapChain* pSwapChain = NULL;
@@ -58,14 +58,14 @@ ID3D10RenderTargetView* pRenderTargetView = NULL;
 int BackBufferWidth = 0;
 int BackBufferHeight = 0;
 
-#define TEXTURE_PATH_BRICK L"brick.png"
-#define BRICK_START_X 8.0f
+#define TEXTURE_PATH_BRICK L"rasengan.png"
+#define BRICK_START_X 26.0f
 #define BRICK_START_Y 200.0f
 
-#define BRICK_START_VX 0.2f
+#define BRICK_START_VX 0.3f
 
-#define BRICK_WIDTH 16.0f
-#define BRICK_HEIGHT 16.0f
+#define BRICK_WIDTH 46.0f
+#define BRICK_HEIGHT 46.0f
 
 
 ID3D10Texture2D* texBrick = NULL;				// Texture object to store brick image
@@ -75,6 +75,7 @@ D3DX10_SPRITE spriteBrick;
 
 float brick_x = BRICK_START_X;
 float brick_vx = BRICK_START_VX;
+float brick_vy = BRICK_START_VX;
 float brick_y = BRICK_START_Y;
 
 
@@ -310,12 +311,14 @@ void Update(DWORD dt)
 	//Uncomment the whole function to see the brick moves and bounces back when hitting left and right edges
 	//brick_x++;
 
-	brick_x += brick_vx*dt; 
+	brick_x += brick_vx*dt;
+	brick_y += brick_vy * dt * 3;
 
 	// NOTE: BackBufferWidth is indeed related to rendering!!
-	float right_edge = BackBufferWidth - BRICK_WIDTH;
+	float right_edge = BackBufferWidth - BRICK_WIDTH/2;
+	float top_edge = BackBufferHeight - BRICK_HEIGHT/2;
 
-	if (brick_x < 0 || brick_x > right_edge) {
+	if (brick_x < BRICK_WIDTH/2 || brick_x > right_edge) {
 
 		brick_vx = -brick_vx;
 
@@ -328,6 +331,10 @@ void Update(DWORD dt)
 		////	{
 		////		brick_x = right_edge;
 		////	}
+	}
+	if (brick_y > top_edge || brick_y < BRICK_HEIGHT / 2)
+	{
+		brick_vy = -brick_vy;
 	}
 }
 
