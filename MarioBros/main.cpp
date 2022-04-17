@@ -46,10 +46,10 @@ HWND hWnd = 0;
 // Each color is from 0.0f to 1.0f  ( 0/255 to 255/255 ) 
 #define BACKGROUND_COLOR D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.2f)
 
-#define WINDOW_WIDTH 940
-#define WINDOW_HEIGHT 680
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 480
 
-#define MAX_FRAME_RATE 200
+#define MAX_FRAME_RATE 100
 
 ID3D10Device* pD3DDevice = NULL;
 IDXGISwapChain* pSwapChain = NULL;
@@ -58,24 +58,26 @@ ID3D10RenderTargetView* pRenderTargetView = NULL;
 int BackBufferWidth = 0;
 int BackBufferHeight = 0;
 
-#define TEXTURE_PATH_BRICK L"rasengan.png"
-#define BRICK_START_X 26.0f
+#define TEXTURE_PATH_BRICK L"brick.png"
+#define TEXTURE_PATH_CHIDORI L"chidori.png"
+#define BRICK_START_X 8.0f
 #define BRICK_START_Y 200.0f
 
-#define BRICK_START_VX 0.3f
+#define BRICK_START_VX 0.2f
 
-#define BRICK_WIDTH 46.0f
-#define BRICK_HEIGHT 46.0f
+#define BRICK_WIDTH 16.0f
+#define BRICK_HEIGHT 16.0f
 
 
 ID3D10Texture2D* texBrick = NULL;				// Texture object to store brick image
+ID3D10Texture2D* texChidori = NULL;
+
 ID3DX10Sprite* spriteObject = NULL;				// Sprite handling object 
 
 D3DX10_SPRITE spriteBrick;
 
 float brick_x = BRICK_START_X;
 float brick_vx = BRICK_START_VX;
-float brick_vy = BRICK_START_VX;
 float brick_y = BRICK_START_Y;
 
 
@@ -233,51 +235,74 @@ void InitDirectX(HWND hWnd)
 */
 void LoadResources()
 {
-	ID3D10Resource* pD3D10Resource = NULL;
+	ID3D10Resource* pBrickResource = NULL;
+	ID3D10Resource* pChidoriResource = NULL;
 
 	// Loads the texture into a temporary ID3D10Resource object
 	HRESULT hr = D3DX10CreateTextureFromFile(pD3DDevice,
 		TEXTURE_PATH_BRICK,
 		NULL,
 		NULL,
-		&pD3D10Resource,
+		&pBrickResource,
+		NULL);
+
+	HRESULT hr2 = D3DX10CreateTextureFromFile(pD3DDevice,
+		TEXTURE_PATH_CHIDORI,
+		NULL,
+		NULL,
+		&pChidoriResource,
 		NULL);
 
 	// Make sure the texture was loaded successfully
-	if (FAILED(hr))
+	if (FAILED(hr) || FAILED(hr2))
 	{
 		DebugOut((wchar_t*)L"[ERROR] Failed to load texture file: %s \n", TEXTURE_PATH_BRICK);
+		DebugOut((wchar_t*)L"[ERROR] Failed to load texture file: %s \n", TEXTURE_PATH_CHIDORI);
 		return;
 	}
 
 	// Translates the ID3D10Resource object into a ID3D10Texture2D object
-	pD3D10Resource->QueryInterface(__uuidof(ID3D10Texture2D), (LPVOID*)&texBrick);
-	pD3D10Resource->Release();
+	pBrickResource->QueryInterface(__uuidof(ID3D10Texture2D), (LPVOID*)&texBrick);
+	pBrickResource->Release();
 
-	if (!texBrick) {
+	pChidoriResource->QueryInterface(__uuidof(ID3D10Texture2D), (LPVOID*)&texChidori);
+	pChidoriResource->Release();
+
+	if (!texBrick || !texChidori) {
 		DebugOut((wchar_t*)L"[ERROR] Failed to convert from ID3D10Resource to ID3D10Texture2D \n");
 		return;
 	}
 
 	// Get the texture details
-	D3D10_TEXTURE2D_DESC desc;
-	texBrick->GetDesc(&desc);
+	D3D10_TEXTURE2D_DESC descBrick;
+	D3D10_TEXTURE2D_DESC descChidori;
+
+	texBrick->GetDesc(&descBrick);
+	texChidori->GetDesc(&descChidori);
 
 	// Create a shader resource view of the texture
-	D3D10_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+	D3D10_SHADER_RESOURCE_VIEW_DESC SRVDescBrick;
+	D3D10_SHADER_RESOURCE_VIEW_DESC SRVDescChidori;
 
 	// Clear out the shader resource view description structure
-	ZeroMemory(&SRVDesc, sizeof(SRVDesc));
+	ZeroMemory(&SRVDescBrick, sizeof(SRVDescBrick));
+	ZeroMemory(&SRVDescChidori, sizeof(SRVDescChidori));
 
 	// Set the texture format
-	SRVDesc.Format = desc.Format;
+	SRVDescBrick.Format = descBrick.Format;
 	// Set the type of resource
-	SRVDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
-	SRVDesc.Texture2D.MipLevels = desc.MipLevels;
+	SRVDescBrick.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+	SRVDescBrick.Texture2D.MipLevels = descBrick.MipLevels;
+
+	SRVDescChidori.Format = descChidori.Format;
+	// Set the type of resource
+	SRVDescChidori.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+	SRVDescChidori.Texture2D.MipLevels = descChidori.MipLevels;
 
 	ID3D10ShaderResourceView* gSpriteTextureRV = NULL;
 
-	pD3DDevice->CreateShaderResourceView(texBrick, &SRVDesc, &gSpriteTextureRV);
+	pD3DDevice->CreateShaderResourceView(texBrick, &SRVDescBrick, &gSpriteTextureRV);
+	pD3DDevice->CreateShaderResourceView(texChidori, &SRVDescChidori, &gSpriteTextureRV);
 
 	// Set the sprite’s shader resource view
 	spriteBrick.pTexture = gSpriteTextureRV;
@@ -311,14 +336,12 @@ void Update(DWORD dt)
 	//Uncomment the whole function to see the brick moves and bounces back when hitting left and right edges
 	//brick_x++;
 
-	brick_x += brick_vx*dt;
-	brick_y += brick_vy * dt * 3;
+	brick_x += brick_vx * dt;
 
 	// NOTE: BackBufferWidth is indeed related to rendering!!
-	float right_edge = BackBufferWidth - BRICK_WIDTH/2;
-	float top_edge = BackBufferHeight - BRICK_HEIGHT/2;
+	float right_edge = BackBufferWidth - BRICK_WIDTH;
 
-	if (brick_x < BRICK_WIDTH/2 || brick_x > right_edge) {
+	if (brick_x < 0 || brick_x > right_edge) {
 
 		brick_vx = -brick_vx;
 
@@ -331,10 +354,6 @@ void Update(DWORD dt)
 		////	{
 		////		brick_x = right_edge;
 		////	}
-	}
-	if (brick_y > top_edge || brick_y < BRICK_HEIGHT / 2)
-	{
-		brick_vy = -brick_vy;
 	}
 }
 
