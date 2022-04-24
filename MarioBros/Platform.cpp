@@ -4,6 +4,7 @@
 #include "Sprites.h"
 
 #include "Textures.h"
+#include "Camera.h"
 
 void CPlatform::RenderBoundingBox()
 {
@@ -21,7 +22,7 @@ void CPlatform::RenderBoundingBox()
 	rect.bottom = (int)b - (int)t;
 
 	float cx, cy;
-	CGame::GetInstance()->GetCamPos(cx, cy);
+	Camera::GetInstance()->GetCamPos(cx, cy);
 
 	float xx = x - this->cellWidth / 2 + rect.right / 2;
 

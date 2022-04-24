@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "Coin.h"
 #include "Platform.h"
+#include "Camera.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -260,7 +261,7 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 
 	PurgeDeletedObjects();
 }
