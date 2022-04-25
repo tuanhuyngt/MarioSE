@@ -52,6 +52,8 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	int texID = atoi(tokens[5].c_str());
 
 	LPTEXTURE tex = CTextures::GetInstance()->Get(texID);
+
+
 	if (tex == NULL)
 	{
 		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
@@ -286,7 +288,7 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
-	Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	Camera::GetInstance()->SetCamPos(cx, 240.0f /*cy*/);
 
 	PurgeDeletedObjects();
 }

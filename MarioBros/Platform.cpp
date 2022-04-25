@@ -6,6 +6,11 @@
 #include "Textures.h"
 #include "Camera.h"
 
+void CPlatform::Render()
+{
+	RenderBoundingBox();
+}
+
 void CPlatform::RenderBoundingBox()
 {
 	D3DXVECTOR3 p(x, y, 0);
@@ -27,25 +32,6 @@ void CPlatform::RenderBoundingBox()
 	float xx = x - this->cellWidth / 2 + rect.right / 2;
 
 	CGame::GetInstance()->Draw(xx - cx, y - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
-}
-
-void CPlatform::Render()
-{
-	if (this->length <= 0) return; 
-	float xx = x; 
-	CSprites * s = CSprites::GetInstance();
-
-	s->Get(this->spriteIdBegin)->Draw(xx, y);
-	xx += this->cellWidth;
-	for (int i = 1; i < this->length - 1; i++)
-	{
-		s->Get(this->spriteIdMiddle)->Draw(xx, y);
-		xx += this->cellWidth;
-	}
-	if (length>1)
-		s->Get(this->spriteIdEnd)->Draw(xx, y);
-
-	RenderBoundingBox();
 }
 
 void CPlatform::GetBoundingBox(float& l, float& t, float& r, float& b)
