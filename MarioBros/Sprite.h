@@ -2,6 +2,7 @@
 
 #include "Texture.h"
 #include "Game.h"
+#include "Camera.h"
 
 class CSprite
 {

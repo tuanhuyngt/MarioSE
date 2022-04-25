@@ -26,5 +26,10 @@ public:
 		x = cam_x;
 		y = cam_y;
 	}
+
+	float GetCamPosX()
+	{
+		return cam_x;
+	}
 };
 
