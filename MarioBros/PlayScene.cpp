@@ -11,6 +11,7 @@
 #include "Platform.h"
 #include "Camera.h"
 #include "Map.h"
+#include "ColorBox.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -113,6 +114,7 @@ void CPlayScene::_ParseSection_MAP(string line) {
 	else map->IsWorldMap = false;
 }
 
+
 /*
 	Parse a line in section [OBJECTS] 
 */
@@ -162,6 +164,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			sprite_begin, sprite_middle, sprite_end
 		);
 
+		break;
+	}
+
+	case OBJECT_TYPE_COLORBOX:
+	{
+		int width, height;
+		width = atoi(tokens[3].c_str());
+		height = atoi(tokens[4].c_str());
+		obj = new ColorBox(width, height);
 		break;
 	}
 
