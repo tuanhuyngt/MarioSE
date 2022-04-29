@@ -3,6 +3,7 @@
 mario.txt
 coin.txt
 cloud.txt
+goomba.txt
 brick.txt
 #
 [OBJECTS]
@@ -12,6 +13,8 @@ brick.txt
 
 # MARIO
 0	20	200
+#GOOMBA (1=NORMAL,2=SMART)
+2	200	400	2
 
 #COIN
 4	100	120
