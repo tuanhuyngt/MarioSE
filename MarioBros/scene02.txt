@@ -5,6 +5,7 @@ coin.txt
 cloud.txt
 goomba.txt
 brick.txt
+questionbrick.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -42,6 +43,19 @@ brick.txt
 5	2104	632	16	16	10	51000	51000	51000
 5	2312	536	16	16	3	51000	51000	51000
 
+#QuestionBrick
+7	184	360	1
+7	200	360	1
+
+7	232	312	1
+7	248	312	2
+
+7	424	328	1
+
+
+7	664	392	2
+
+7	1480	368	2
 #ColorBox
 6	264	392	48	48
 6	296	376	48	80
