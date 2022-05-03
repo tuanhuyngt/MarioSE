@@ -288,6 +288,7 @@ void CPlayScene::Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
+		
 		coObjects.push_back(objects[i]);
 	}
 

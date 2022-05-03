@@ -12,14 +12,14 @@
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
-#define BBOX_ALPHA 0.0f		// Bounding box transparency
+#define BBOX_ALPHA 0.3f		// Bounding box transparency
 
 class CGameObject
 {
 protected:
 	int type;
 	int width;
-
+	bool isitem;
 	float x; 
 	float y;
 
@@ -66,6 +66,10 @@ public:
 	
 	// Is this object blocking other object? If YES, collision framework will automatically push the other object
 	virtual int IsBlocking() { return 1; }
+	virtual int IsBlockingX() { return 1; }
+	virtual int IsBlockingY() { return 1; }
+	virtual void DirectBlocking(int& l, int& t, int& r, int& b) { l = 1; t = 1; b = 1; r = 1; }
+
 
 	int GetType() {
 		return type;

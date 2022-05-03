@@ -4,7 +4,7 @@ mario.txt
 coin.txt
 cloud.txt
 goomba.txt
-brick.txt
+item.txt
 questionbrick.txt
 #
 [OBJECTS]
