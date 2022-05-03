@@ -79,6 +79,10 @@ public:
 		return width;
 	}
 
+	int CheckIsItem() {
+		return isitem;
+	}
+
 	~CGameObject();
 
 	static bool IsDeleted(const LPGAMEOBJECT &o) { return o->isDeleted; }

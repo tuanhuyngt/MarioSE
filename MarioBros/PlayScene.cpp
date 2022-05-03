@@ -288,7 +288,12 @@ void CPlayScene::Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
-		
+		if (dynamic_cast<QuestionBrick*>(objects[i]))
+		{
+			QuestionBrick* QBrick = dynamic_cast<QuestionBrick*>(objects[i]);
+			if (!QBrick->innitItemSuccess)
+				AddItemToQBrick(QBrick, i);
+		}
 		coObjects.push_back(objects[i]);
 	}
 
