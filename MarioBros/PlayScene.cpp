@@ -153,7 +153,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_QUESTIONBRICK: {
 		int item = atoi(tokens[3].c_str());
 		obj = new QuestionBrick(x, y, item);
-		//Items.push_back(item);
 		break;
 	}
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
