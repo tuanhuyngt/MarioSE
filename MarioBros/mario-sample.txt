@@ -14,5 +14,8 @@ height	240
 -100	textures\bbox.png
 0	textures\mario.png
 10	textures\enemies.png
+
+12	textures\enemies2.png
+
 20	textures\misc.png
 9000	Maps\SMB3_1-1_map_bank.png

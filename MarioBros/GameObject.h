@@ -83,6 +83,10 @@ public:
 		return isitem;
 	}
 
+	void SetNx(int nx) {
+		this->nx = nx;
+	}
+
 	~CGameObject();
 
 	static bool IsDeleted(const LPGAMEOBJECT &o) { return o->isDeleted; }

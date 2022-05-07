@@ -14,6 +14,7 @@
 #include "ColorBox.h"
 #include "QuestionBrick.h"
 #include "SampleKeyEventHandler.h"
+#include "Koopas.h"
 
 using namespace std;
 
@@ -147,6 +148,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GOOMBA: {
 		int goombaLevel = atoi(tokens[3].c_str());
 		obj = new CGoomba(x, y, goombaLevel);
+		break;
+	}
+	case OBJECT_TYPE_KOOPAS: {
+		int koopasLevel = atoi(tokens[3].c_str());
+		obj = new Koopas(x, y, koopasLevel);
 		break;
 	}
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;

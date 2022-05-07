@@ -4,6 +4,8 @@ mario.txt
 coin.txt
 cloud.txt
 goomba.txt
+koopas.txt
+
 item.txt
 questionbrick.txt
 #
@@ -17,19 +19,9 @@ questionbrick.txt
 #GOOMBA (1=NORMAL,2=SMART)
 2	200	400	2
 
-#COIN
-4	100	120
-4	120	120
-4	140	120
-4	160	120
-4	180	120
-
-
-4	100	100
-4	120	100
-4	140	100
-4	160	100
-4	180	100
+#KOOPAS (1=NORMAL,2=PARA)
+3	650	370	2
+3	600	370	1
 
 #Platform
 5	8	424	16	16	39	51000	52000	53000
