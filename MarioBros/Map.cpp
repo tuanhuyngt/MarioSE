@@ -65,15 +65,19 @@ void Map::Draw()
 	{
 		int firstcol = (int)Camera::GetInstance()->GetCamPosX() / 16;
 		if (firstcol < 0) { firstcol = 0; }
-		int lastcol = firstcol + 20;
+		int lastcol = ((int)Camera::GetInstance()->GetCamPosX()+CGame::GetInstance()->GetBackBufferWidth()) / 16+1;
+
+		int firstrow = (int)Camera::GetInstance()->GetCamPosY() / 16;
+		int lastrow = ((int)Camera::GetInstance()->GetCamPosY() + CGame::GetInstance()->GetBackBufferWidth()) / 16 + 1;
 		DebugOut(L"Cmx: %d\n", GetMapWidth());
-		for (UINT i = 0; i < Num_Rows; i++)
+		for (UINT i = firstrow; i < lastrow; i++)
 		{
 			for (UINT j = firstcol; j < lastcol; j++)
 			{
 				float x = Tile_Width * j + 8;
 				float y = Tile_Height * i + 8;
-				sprites->Get(tilemap[i][j] + Id)->Draw(x, y);
+				if (tilemap[i][j])
+					sprites->Get(tilemap[i][j] + Id)->Draw(x, y);
 			}
 		}
 	}

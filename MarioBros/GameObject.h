@@ -18,7 +18,6 @@ class CGameObject
 {
 protected:
 	int type;
-	int width;
 	bool isitem;
 	float x; 
 	float y;
@@ -73,10 +72,6 @@ public:
 
 	int GetType() {
 		return type;
-	}
-
-	int GetWidth() {
-		return width;
 	}
 
 	int CheckIsItem() {

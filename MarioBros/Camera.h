@@ -31,5 +31,10 @@ public:
 	{
 		return cam_x;
 	}
+
+	float GetCamPosY()
+	{
+		return cam_y;
+	}
 };
 
