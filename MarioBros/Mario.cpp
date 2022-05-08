@@ -45,7 +45,7 @@ void CMario::OnNoCollision(DWORD dt)
 	y += vy * dt;
 }
 
-void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
+void CMario::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt)
 {
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
