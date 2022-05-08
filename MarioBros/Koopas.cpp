@@ -101,7 +101,7 @@ void Koopas::GetKoopasAni(int& IdAni)
 		if (vx > 0)IdAni = ID_ANI_KOOPAS_WALKING_RIGHT;
 		else IdAni = ID_ANI_KOOPAS_WALKING_LEFT;
 	}
-	else if (state == KOOPAS_STATE_INSHELL || state == KOOPAS_STATE_DIE_BY_SHELL)IdAni = ID_ANI_KOOPAS_INSHELL;
+	else if (state == KOOPAS_STATE_INSHELL)IdAni = ID_ANI_KOOPAS_INSHELL;
 	else if (state == KOOPAS_STATE_INSHELL_ATTACK)IdAni = ID_ANI_KOOPAS_INSHELL_ATTACK;
 
 }
@@ -113,7 +113,7 @@ void Koopas::GetRedKoopasAni(int& IdAni)
 		if (vx > 0)IdAni = ID_ANI_REDKOOPAS_WALKING_RIGHT;
 		else IdAni = ID_ANI_REDKOOPAS_WALKING_LEFT;
 	}
-	else if (state == KOOPAS_STATE_INSHELL || state == KOOPAS_STATE_DIE_BY_SHELL)IdAni = ID_ANI_REDKOOPAS_INSHELL;
+	else if (state == KOOPAS_STATE_INSHELL)IdAni = ID_ANI_REDKOOPAS_INSHELL;
 	else if (state == KOOPAS_STATE_INSHELL_ATTACK)IdAni = ID_ANI_REDKOOPAS_INSHELL_ATTACK;
 }
 
@@ -146,8 +146,6 @@ void Koopas::SetState(int state)
 	case KOOPAS_STATE_DIE_BY_SHELL:
 		vx = nx * GOOMBA_DIEBYSHELL_VX;
 		vy = -GOOMBA_DIEBYSHELL_VY;
-		InShell = true;
-		IsAttack = false;
 		break;
 	default:
 		break;

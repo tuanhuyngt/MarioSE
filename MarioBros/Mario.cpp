@@ -10,13 +10,19 @@
 #include "QuestionBrick.h"
 #include "Mushroom.h"
 #include "Collision.h"
+#include "Koopas.h"
+#include "FirePiranhaPlant.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
 
-	if (abs(vx) > abs(maxVx)) vx = maxVx;
+	if (abs(vx) > abs(maxVx) && state != MARIO_STATE_IDLE) vx = maxVx;
+	if (state == MARIO_STATE_IDLE) {
+		if (nx > 0 && vx < 0) { vx = 0; ax = 0; }
+		else if (nx < 0 && vx > 0) { vx = 0; ax = 0; }
+	}
 
 	if (y > 414)
 		this->SetState(MARIO_STATE_DIE);
@@ -60,6 +66,10 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<QuestionBrick*>(e->obj))
 		OnCollisionWithQuestionBrick(e);
+	else if (dynamic_cast<Koopas*>(e->obj))
+		OnCollisionWithKoopas(e);
+	else if (dynamic_cast<FirePiranhaPlant*>(e->obj))
+		OnCollisionWithPlant(e);
 	else if (e->obj->CheckIsItem())
 		OnCollisionWithItem(e);
 }
@@ -127,6 +137,57 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
+{
+	Koopas* koopas = dynamic_cast<Koopas*>(e->obj);
+	if (e->ny < 0)
+	{
+		if (!isOnPlatform)
+		{
+			if (koopas->level < PARA_KOOPAS)
+			{
+
+				switch (koopas->GetState())
+				{
+				case KOOPAS_STATE_WALKING:
+					koopas->SetState(KOOPAS_STATE_INSHELL);
+					vy = -MARIO_JUMP_DEFLECT_SPEED;
+					break;
+				case KOOPAS_STATE_INSHELL:
+					koopas->SetState(KOOPAS_STATE_INSHELL_ATTACK);
+					vy = -MARIO_JUMP_DEFLECT_SPEED;
+					break;
+				case KOOPAS_STATE_INSHELL_ATTACK:
+					koopas->SetState(KOOPAS_STATE_INSHELL);
+					vy = -MARIO_JUMP_DEFLECT_SPEED;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+	else // hit by Koopas
+	{
+		if (untouchable == 0)
+		{
+			if (koopas->IsAttack)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+	}
+}
+
 void CMario::OnCollisionWithItem(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<Mushroom*>(e->obj))
@@ -136,6 +197,24 @@ void CMario::OnCollisionWithItem(LPCOLLISIONEVENT e)
 		e->obj->Delete();
 	}
 }
+
+void CMario::OnCollisionWithPlant(LPCOLLISIONEVENT e)
+{
+	if (untouchable == 0)
+	{
+		if (level > MARIO_LEVEL_SMALL)
+		{
+			level = MARIO_LEVEL_SMALL;
+			StartUntouchable();
+		}
+		else
+		{
+			DebugOut(L">>> Mario Plant DIE >>> \n");
+			SetState(MARIO_STATE_DIE);
+		}
+	}
+}
+
 
 
 //
