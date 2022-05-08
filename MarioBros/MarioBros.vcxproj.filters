@@ -108,6 +108,9 @@
     <ClCompile Include="FirePiranhaPlant.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="FireBullet.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -207,6 +210,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FirePiranhaPlant.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="FireBullet.h">
       <Filter>Enemies</Filter>
     </ClInclude>
   </ItemGroup>

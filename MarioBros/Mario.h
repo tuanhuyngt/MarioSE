@@ -10,7 +10,9 @@
 #define MARIO_RUNNING_SPEED		0.2f
 
 #define MARIO_ACCEL_WALK_X	0.0005f
+#define MARIO_ACCEL_SLOWING_DOWN_X	0.00015f
 #define MARIO_ACCEL_RUN_X	0.0007f
+#define MARIO_FRICTION		0.006f
 
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
@@ -147,6 +149,7 @@ public:
 	}
 
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
+	int IsUntouchable() { return untouchable; }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);

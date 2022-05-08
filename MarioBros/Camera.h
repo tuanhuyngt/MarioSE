@@ -36,5 +36,10 @@ public:
 	{
 		return cam_y;
 	}
+
+	bool IsInCam(float objX, float objY)
+	{
+		return !(objX < cam_x || objX - cam_x>SCREEN_WIDTH || objY < cam_y || objY - cam_y > SCREEN_HEIGHT);
+	}
 };
 

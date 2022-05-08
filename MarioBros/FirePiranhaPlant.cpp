@@ -24,6 +24,9 @@ void FirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			y = maxY;
 		}
 	}
+	if (y == minY) {
+		CalcAtatckEnemy();
+	}
 	if (state == FIRE_PIRANHAPLANT_STATE_UP) {
 		if (GetTickCount64() - CalcAtkTime >= 3000) {
 			SetState(FIRE_PIRANHAPLANT_STATE_DOWN);
@@ -34,6 +37,9 @@ void FirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			SetState(FIRE_PIRANHAPLANT_STATE_UP);
 		}
 	}
+
+	if (fireBullet->isActivate)
+		fireBullet->Update(dt, coObjects);
 }
 
 void FirePiranhaPlant::Render()
@@ -41,6 +47,10 @@ void FirePiranhaPlant::Render()
 	aniId = ID_ANI_FIREPLANT_LEFT_DOWN;
 	CAnimations* animations = CAnimations::GetInstance();
 	animations->Get(aniId)->Render(x, y);
+	if (fireBullet->isActivate)
+	{
+		fireBullet->Render();
+	}
 }
 
 
