@@ -16,6 +16,7 @@ height	240
 10	textures\enemies.png
 
 12	textures\enemies2.png
+13	textures\plant.png
 
 20	textures\misc.png
 9000	Maps\SMB3_1-1_map_bank.png

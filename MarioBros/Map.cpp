@@ -69,7 +69,7 @@ void Map::Draw()
 
 		int firstrow = (int)Camera::GetInstance()->GetCamPosY() / 16;
 		int lastrow = ((int)Camera::GetInstance()->GetCamPosY() + CGame::GetInstance()->GetBackBufferWidth()) / 16 + 1;
-		DebugOut(L"Cmx: %d\n", GetMapWidth());
+		//DebugOut(L"Cmx: %d\n", GetMapWidth());
 		for (UINT i = firstrow; i < lastrow; i++)
 		{
 			for (UINT j = firstcol; j < lastcol; j++)
