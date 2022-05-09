@@ -34,6 +34,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
+	if (IsAttack)
+	{
+		if (nx > 0)
+			tail->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2 + TAIL_BBOX_WIDTH / 2, y + 5);
+		else
+			tail->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 - TAIL_BBOX_WIDTH / 2, y + 5);
+
+
+		tail->Update(dt, coObjects);
+		if (GetTickCount64() - AttackTime >= RACOON_ATTACK_TIME)
+		{
+			IsAttack = false;
+		}
+	}
+
 	isOnPlatform = false;
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -511,6 +526,11 @@ void CMario::SetState(int state)
 	case MARIO_STATE_IDLE:
 		ax = 0.0f;
 		vx = 0.0f;
+		break;
+
+	case MARIO_STATE_ATTACK:
+		IsAttack = true;
+		AttackTime = GetTickCount64();
 		break;
 
 	case MARIO_STATE_DIE:

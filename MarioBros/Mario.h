@@ -3,6 +3,7 @@
 
 #include "Animation.h"
 #include "Animations.h"
+#include "MarioTail.h"
 
 #include "debug.h"
 
@@ -21,7 +22,7 @@
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 #define MARIO_MAX_SPEED_STACK	7
-
+#define RACOON_ATTACK_TIME 250
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
 #define MARIO_STATE_WALKING_RIGHT	100
@@ -37,6 +38,9 @@
 #define MARIO_STATE_SIT_RELEASE		601
 
 
+#define MARIO_STATE_ATTACK	800
+
+#define MARIO_STATE_SLOW_FALLING	302
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -131,11 +135,16 @@ class CMario : public CGameObject
 
 	int speedStack;
 
+	MarioTail* tail;
+
 	int level; 
 	int untouchable; 
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	int coin; 
+
+	bool IsAttack;
+	DWORD AttackTime;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -161,6 +170,7 @@ public:
 		isOnPlatform = false;
 		coin = 0;
 		speedStack = 0;
+		tail = new MarioTail();
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -178,6 +188,8 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
+
+	bool CheckMarioIsOnPlatform() { return isOnPlatform; };
 
 	void SetLevel(int l);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
