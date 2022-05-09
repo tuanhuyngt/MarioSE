@@ -311,7 +311,7 @@ void CPlayScene::Update(DWORD dt)
 		}
 		coObjects.push_back(objects[i]);
 	}
-	//Mario.push_back(objects[0]);
+	Mario.push_back(objects[0]);
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -337,6 +337,14 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
+	if (cx + game->GetBackBufferWidth() >= 16 * 176)
+	{
+		cx = 16 * 176 - game->GetBackBufferWidth();
+	}
+	if (player->GetX() <= MARIO_BIG_BBOX_WIDTH / 2)
+	{
+		player->SetX(MARIO_BIG_BBOX_WIDTH / 2);
+	}
 	Camera::GetInstance()->SetCamPos(cx, 240.0f /*cy*/);
 
 	PurgeDeletedObjects();

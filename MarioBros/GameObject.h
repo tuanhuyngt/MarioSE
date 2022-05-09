@@ -86,6 +86,10 @@ public:
 		return x;
 	}
 
+	void SetX(float x) {
+		this->x = x;
+	}
+
 	float GetY() {
 		return y;
 	}

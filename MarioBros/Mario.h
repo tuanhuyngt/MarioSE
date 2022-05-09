@@ -20,6 +20,7 @@
 #define MARIO_GRAVITY			0.002f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
+#define MARIO_MAX_SPEED_STACK	7
 
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
@@ -80,6 +81,23 @@
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT 1600
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
 
+#define ID_ANI_SMALLMARIO_KICKKOOPAS_RIGHT	1801
+#define ID_ANI_SMALLMARIO_KICKKOOPAS_LEFT	1800
+
+#define ID_ANI_RACOON_IDLE_RIGHT 1900
+#define ID_ANI_RACOON_IDLE_LEFT 1901
+
+#define ID_ANI_RACOON_WALKING_RIGHT 1902
+#define ID_ANI_RACOON_WALKING_LEFT 1903
+
+#define ID_ANI_RACOON_JUMP_WALK_RIGHT 1904
+#define ID_ANI_RACOON_JUMP_WALK_LEFT 1905
+
+#define ID_ANI_RACOON_FALLING_RIGHT 1906
+#define ID_ANI_RACOON_FALLING_LEFT 1907
+
+#define ID_ANI_RACOON_RUNNING_RIGHT 1908
+#define ID_ANI_RACOON_RUNNING_LEFT 1909
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -89,6 +107,7 @@
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
+#define	MARIO_LEVEL_RACOON		3
 
 #define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 24
@@ -110,6 +129,8 @@ class CMario : public CGameObject
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
+	int speedStack;
+
 	int level; 
 	int untouchable; 
 	ULONGLONG untouchable_start;
@@ -124,6 +145,7 @@ class CMario : public CGameObject
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
+	int GetAniIdRacoon();
 
 public:
 	CMario(float x, float y) : CGameObject(x, y)
@@ -133,11 +155,12 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
 
-		level = MARIO_LEVEL_SMALL;
+		level = MARIO_LEVEL_RACOON;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
 		coin = 0;
+		speedStack = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
