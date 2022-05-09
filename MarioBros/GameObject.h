@@ -82,6 +82,14 @@ public:
 		this->nx = nx;
 	}
 
+	float GetX() {
+		return x;
+	}
+
+	float GetY() {
+		return y;
+	}
+
 	~CGameObject();
 
 	static bool IsDeleted(const LPGAMEOBJECT &o) { return o->isDeleted; }

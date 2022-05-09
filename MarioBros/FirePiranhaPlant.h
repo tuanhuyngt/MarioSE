@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "GameObject.h"
 #include "FireBullet.h"
 
@@ -71,8 +70,18 @@ public:
 			else
 				VyBullet = 0.03;
 		}
-		BulletX = x + FIRE_PIRANHAPLANT_BBOX_WIDTH / 2;
-		VxBullet = 0.05;
+		if (enemyX > x)
+		{
+			VxBullet = 0.05;
+			nx = 1;
+			BulletX = x + FIRE_PIRANHAPLANT_BBOX_WIDTH / 2;
+		}
+		else
+		{
+			VxBullet = -0.05;
+			nx = -1;
+			BulletX = x - FIRE_PIRANHAPLANT_BBOX_WIDTH / 2;
+		}
 		BulletY = minY - 8;
 		if (!fireBullet->isActivate)
 		{
@@ -81,6 +90,8 @@ public:
 			fireBullet->SetSpeed(VxBullet, VyBullet);
 		}
 	}
+
+	void GetAniFirePlant();
 
 public:
 	void GetEnemyPos(float EnemyX, float EnemyY) {
