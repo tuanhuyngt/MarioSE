@@ -25,7 +25,7 @@ protected:
 	float vx;
 	float vy;
 
-	int nx;	 
+	int nx; 
 
 	int state;
 
@@ -88,6 +88,10 @@ public:
 
 	void SetX(float x) {
 		this->x = x;
+	}
+
+	void SetNX(float nx) {
+		this->nx = nx;
 	}
 
 	float GetY() {

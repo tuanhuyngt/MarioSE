@@ -21,7 +21,11 @@
 #define MARIO_GRAVITY			0.002f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
+#define MARIO_SLOW_FALLING_SPEED  0.02f
 #define MARIO_MAX_SPEED_STACK	7
+
+#define MARIO_KICK_KOOPAS_TIME 200
+#define MARIO_SLOWFALLING_TIME 200
 #define RACOON_ATTACK_TIME 250
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
@@ -37,6 +41,7 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
+#define MARIO_STATE_KICKKOOPAS	700
 
 #define MARIO_STATE_ATTACK	800
 
@@ -133,6 +138,9 @@ class CMario : public CGameObject
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
+	bool IsSlowFalling;
+	DWORD SlowFallingTime;
+
 	int speedStack;
 
 	MarioTail* tail;
@@ -145,6 +153,9 @@ class CMario : public CGameObject
 
 	bool IsAttack;
 	DWORD AttackTime;
+
+	bool IsKickKoopas;
+	DWORD KickKoopasTime;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
