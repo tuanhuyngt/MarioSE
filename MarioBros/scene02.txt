@@ -9,6 +9,7 @@ koopas.txt
 item.txt
 plants.txt
 questionbrick.txt
+pipe.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type

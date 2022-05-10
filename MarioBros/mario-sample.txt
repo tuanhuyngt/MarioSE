@@ -20,4 +20,5 @@ height	240
 13	textures\plant.png
 
 20	textures\misc.png
+30	textures\pipe.png
 9000	Maps\SMB3_1-1_map_bank.png
