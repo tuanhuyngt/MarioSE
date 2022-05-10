@@ -15,8 +15,8 @@
 #define MARIO_ACCEL_RUN_X	0.0007f
 #define MARIO_FRICTION		0.006f
 
-#define MARIO_JUMP_SPEED_Y		0.5f
-#define MARIO_JUMP_RUN_SPEED_Y	0.6f
+#define MARIO_JUMP_SPEED_Y		0.6f
+#define MARIO_JUMP_RUN_SPEED_Y	0.7f
 
 #define MARIO_GRAVITY			0.002f
 
@@ -24,8 +24,9 @@
 #define MARIO_SLOW_FALLING_SPEED  0.02f
 #define MARIO_MAX_SPEED_STACK	7
 
+#define MARIO_SPEEDSTACK_TIME 250
 #define MARIO_KICK_KOOPAS_TIME 200
-#define MARIO_SLOWFALLING_TIME 200
+#define MARIO_SLOWFALLING_TIME 300
 #define RACOON_ATTACK_TIME 250
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
@@ -46,6 +47,8 @@
 #define MARIO_STATE_ATTACK	800
 
 #define MARIO_STATE_SLOW_FALLING	302
+
+#define MARIO_STATE_FLYING	900
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -107,6 +110,13 @@
 
 #define ID_ANI_RACOON_RUNNING_RIGHT 1908
 #define ID_ANI_RACOON_RUNNING_LEFT 1909
+
+#define ID_ANI_RACOON_SITTING_RIGHT 1912
+#define ID_ANI_RACOON_SITTING_LEFT 1913
+#define ID_ANI_RACOON_BRACE_RIGHT 1914
+#define ID_ANI_RACOON_BRACE_LEFT 1915
+#define ID_ANI_MARIO_SLOWFALLING_RIGHT	1916
+#define ID_ANI_MARIO_SLOWFALLING_LEFT	1917
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -138,12 +148,18 @@ class CMario : public CGameObject
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
+	bool IsFalling;
+	DWORD FallingTime;
 	bool IsSlowFalling;
 	DWORD SlowFallingTime;
+	bool isFlying;
+	DWORD FlyingTime;
 
 	int speedStack;
 
 	MarioTail* tail;
+
+	DWORD SpeedStackTime;
 
 	int level; 
 	int untouchable; 
@@ -174,7 +190,9 @@ public:
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
-
+		isFlying = false;
+		IsAttack = false;
+		IsKickKoopas = false;
 		level = MARIO_LEVEL_RACOON;
 		untouchable = 0;
 		untouchable_start = -1;
@@ -190,7 +208,7 @@ public:
 	int IsCollidable()
 	{ 
 		return (state != MARIO_STATE_DIE); 
-	}
+	}	
 
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
 	int IsUntouchable() { return untouchable; }
@@ -204,8 +222,42 @@ public:
 
 	void SetLevel(int l);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+
+	void IncreaseSpeedStack() {
+		if (speedStack < MARIO_MAX_SPEED_STACK)
+		{
+			if (SpeedStackTime == 0)SpeedStackTime = GetTickCount64();
+			else if (GetTickCount64() - SpeedStackTime > MARIO_SPEEDSTACK_TIME)
+			{
+				SpeedStackTime = 0;
+				speedStack++;
+			}
+		}
+		DebugOut(L">>> Increase Stack >>> \n");
+	}
+
+	void DecreaseSpeedStack() {
+		if (SpeedStackTime == 0)SpeedStackTime = GetTickCount64();
+		else if (GetTickCount64() - SpeedStackTime > MARIO_SPEEDSTACK_TIME)
+		{
+			SpeedStackTime = 0;
+			speedStack--;
+		}
+		DebugOut(L">>> Decrease Stack >>> \n");
+	}
+
 	int GetMarioLevel() {
 		return level;
 	}
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
+	bool IsFlying()
+	{
+		return isFlying;
+	}
+
+	int GetSpeedStack()
+	{
+		return speedStack;
+	}
 };

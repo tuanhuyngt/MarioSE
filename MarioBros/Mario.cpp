@@ -34,6 +34,33 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			SetState(MARIO_STATE_RELEASE_JUMP);
 		}
 	}
+	if (IsFalling)
+	{
+		if (GetTickCount64() - FallingTime >= MARIO_SLOWFALLING_TIME)
+		{
+			IsFalling = false;
+			SetState(MARIO_STATE_RELEASE_JUMP);
+		}
+	}
+	if (isFlying)
+	{
+		if (GetTickCount64() - FlyingTime >= 3000)
+		{
+			isFlying = false;
+			if (!isOnPlatform)SetState(MARIO_STATE_RELEASE_JUMP);
+		}
+	}
+	if (abs(ax) == MARIO_ACCEL_RUN_X)
+	{
+		IncreaseSpeedStack();
+	}
+	else {
+		if (speedStack > 0)
+		{
+			if (!isFlying)
+				DecreaseSpeedStack();
+		}
+	}
 
 	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
@@ -364,14 +391,16 @@ int CMario::GetAniIdRacoon()
 		}
 	}
 	else
+	{
 		if (isSitting)
 		{
 			if (nx > 0)
-				aniId = ID_ANI_RACOON_WALKING_RIGHT;
+				aniId = ID_ANI_RACOON_SITTING_RIGHT;
 			else
-				aniId = ID_ANI_RACOON_WALKING_LEFT;
+				aniId = ID_ANI_RACOON_SITTING_LEFT;
 		}
 		else
+		{
 			if (vx == 0)
 			{
 				if (nx > 0) aniId = ID_ANI_RACOON_IDLE_RIGHT;
@@ -379,7 +408,9 @@ int CMario::GetAniIdRacoon()
 			}
 			else if (vx > 0)
 			{
-				if (ax == MARIO_ACCEL_WALK_X)
+				if (ax == -MARIO_ACCEL_WALK_X || ax == -MARIO_ACCEL_RUN_X)
+					aniId = ID_ANI_RACOON_BRACE_RIGHT;
+				else if (ax == MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_RACOON_WALKING_RIGHT;
 				else if (ax == MARIO_ACCEL_RUN_X)
 				{
@@ -394,7 +425,7 @@ int CMario::GetAniIdRacoon()
 			else // vx < 0
 			{
 				if (ax == MARIO_ACCEL_WALK_X || ax == MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_RACOON_WALKING_LEFT;
+					aniId = ID_ANI_RACOON_BRACE_LEFT;
 				else if (ax == -MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_RACOON_WALKING_LEFT;
 				else if (ax == -MARIO_ACCEL_RUN_X)
@@ -408,6 +439,15 @@ int CMario::GetAniIdRacoon()
 				else if (ax == MARIO_ACCEL_SLOWING_DOWN_X)
 					aniId = ID_ANI_RACOON_WALKING_LEFT;
 			}
+		}
+	}
+	if (IsSlowFalling)
+	{
+		if (nx > 0)
+			aniId = ID_ANI_MARIO_SLOWFALLING_RIGHT;
+		else
+			aniId = ID_ANI_MARIO_SLOWFALLING_LEFT;
+	}
 
 	if (aniId == -1) {
 		aniId = ID_ANI_RACOON_IDLE_RIGHT;
@@ -441,6 +481,7 @@ int CMario::GetAniIdBig()
 		}
 	}
 	else
+	{
 		if (isSitting)
 		{
 			if (nx > 0)
@@ -449,6 +490,7 @@ int CMario::GetAniIdBig()
 				aniId = ID_ANI_MARIO_SIT_LEFT;
 		}
 		else
+		{
 			if (vx == 0)
 			{
 				if (nx > 0) aniId = ID_ANI_MARIO_IDLE_RIGHT;
@@ -456,22 +498,38 @@ int CMario::GetAniIdBig()
 			}
 			else if (vx > 0)
 			{
-				if (ax < 0)
+				if (ax == -MARIO_ACCEL_WALK_X || ax == -MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_BRACE_RIGHT;
-				else if (ax == MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RUNNING_RIGHT;
 				else if (ax == MARIO_ACCEL_WALK_X)
+					aniId = ID_ANI_MARIO_WALKING_RIGHT;
+				else if (ax == MARIO_ACCEL_RUN_X)
+				{
+					if (speedStack == MARIO_MAX_SPEED_STACK)
+						aniId = ID_ANI_MARIO_RUNNING_RIGHT;
+					else
+						aniId = ID_ANI_MARIO_WALKING_RIGHT;
+				}
+				else if (ax == -MARIO_ACCEL_SLOWING_DOWN_X)
 					aniId = ID_ANI_MARIO_WALKING_RIGHT;
 			}
 			else // vx < 0
 			{
-				if (ax > 0)
+				if (ax == MARIO_ACCEL_WALK_X || ax == MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_BRACE_LEFT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RUNNING_LEFT;
 				else if (ax == -MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_WALKING_LEFT;
+				else if (ax == -MARIO_ACCEL_RUN_X)
+				{
+					if (speedStack == MARIO_MAX_SPEED_STACK)
+						aniId = ID_ANI_MARIO_RUNNING_LEFT;
+					else
+						aniId = ID_ANI_MARIO_WALKING_LEFT;
+				}
+				else if (ax == MARIO_ACCEL_SLOWING_DOWN_X)
+					aniId = ID_ANI_MARIO_WALKING_LEFT;
 			}
+		}
+	}
 
 	if (aniId == -1) aniId = ID_ANI_MARIO_IDLE_RIGHT;
 
@@ -542,7 +600,7 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_RELEASE_JUMP:
-		if (vy < 0) vy = 0;
+		//if (vy < 0) vy = 0;
 		ay = MARIO_GRAVITY;
 		break;
 
@@ -591,6 +649,17 @@ void CMario::SetState(int state)
 		vy = MARIO_SLOW_FALLING_SPEED;
 		IsSlowFalling = true;
 		SlowFallingTime = GetTickCount64();
+		break;
+	case MARIO_STATE_FLYING:
+		vy = -0.1f;
+		ay = 0;
+		IsFalling = true;
+		FallingTime = GetTickCount64();
+		if (!isFlying)
+		{
+			isFlying = true;
+			FlyingTime = GetTickCount64();
+		}
 		break;
 	}
 

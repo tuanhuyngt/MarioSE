@@ -98,7 +98,8 @@ protected:
 	}
 
 	void GetParaGoombaAni(int& idAni) {
-		if (level == PARA_GOOMBA)
+		if (state == GOOMBA_STATE_DIEBYSHELL)idAni = ID_ANI_PARAGOOMBA_DIEBYSHELL;
+		else if (level == PARA_GOOMBA)
 		{
 			if (goombaPhase == GOOMBA_PHASE_WALKING)idAni = ID_ANI_PARAGOOMBA_WALKING;
 			else if (goombaPhase == GOOMBA_PHASE_JUMPING)idAni = ID_ANI_PARAGOOMBA_JUMPING;
