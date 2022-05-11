@@ -12,6 +12,7 @@
 #include "Collision.h"
 #include "Koopas.h"
 #include "FirePiranhaPlant.h"
+#include "Leaf.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -270,6 +271,12 @@ void CMario::OnCollisionWithItem(LPCOLLISIONEVENT e)
 		if (level == MARIO_LEVEL_SMALL)
 			y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 		level = MARIO_LEVEL_BIG;
+		e->obj->Delete();
+	}
+	else if (dynamic_cast<Leaf*>(e->obj))
+	{
+		if (level == MARIO_LEVEL_BIG)
+			level = MARIO_LEVEL_RACOON;
 		e->obj->Delete();
 	}
 }

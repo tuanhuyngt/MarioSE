@@ -32,7 +32,7 @@ void FireBullet::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt)
 	if (e->nx || e->ny) {
 		CMario* mario = dynamic_cast<CMario*>(e->obj);
 		if (mario->IsUntouchable() == 0) {
-
+			mario->HandleMarioIsAttacked();
 		}
 	}
 }
