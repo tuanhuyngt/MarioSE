@@ -3,7 +3,7 @@
 
 #include "debug.h"
 
-#define BLOCK_PUSH_FACTOR 0.4f
+#define BLOCK_PUSH_FACTOR 0.2f
 
 CCollision* CCollision::__instance = NULL;
 
@@ -112,6 +112,14 @@ void CCollision::SweptAABB(
 		dy > 0 ? ny = -1.0f : ny = 1.0f;
 	}
 
+}
+bool CCollision::CheckAABB(LPGAMEOBJECT objSrc, LPGAMEOBJECT objDest)
+{
+	float Left, Top, Right, Bottom, left, top, right, bottom;
+	objSrc->GetBoundingBox(Left, Top, Right, Bottom); // Get bbox of objsrc
+	objDest->GetBoundingBox(left, top, right, bottom); // Get bbox of objColliable
+
+	return(!(Left > right || Top > bottom || Right < left || Bottom < top));
 }
 
 /*

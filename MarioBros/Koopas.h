@@ -10,6 +10,7 @@
 #define KOOPAS_STATE_INSHELL	2
 #define KOOPAS_STATE_INSHELL_ATTACK		3
 #define KOOPAS_STATE_DIE_BY_SHELL	4
+#define KOOPAS_STATE_ATTACKED_BY_TAIL	5
 
 #define ID_ANI_KOOPAS_WALKING_RIGHT	30000
 #define ID_ANI_KOOPAS_WALKING_LEFT	30001
@@ -34,8 +35,9 @@ class Koopas : public CGameObject
 protected:
 
 	bool ParaKoopas;
-
+	float ay;
 	bool InShell;
+	bool IsAttackedByTail;
 	DWORD phaseTime;
 
 	ULONGLONG die_start;
@@ -51,6 +53,7 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);
 	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 
 	void GetKoopasAni(int& IdAni);
 	void GetRedKoopasAni(int& IdAni);

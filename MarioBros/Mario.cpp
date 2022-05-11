@@ -107,9 +107,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (IsAttack)
 	{
 		if (nx > 0)
-			tail->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2 + TAIL_BBOX_WIDTH / 2, y + 5);
+			tail->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2 + TAIL_BBOX_WIDTH / 2, y + 6);
 		else
-			tail->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 - TAIL_BBOX_WIDTH / 2, y + 5);
+			tail->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 - TAIL_BBOX_WIDTH / 2, y + 6);
+		tail->SetNX(nx);
 
 
 		tail->Update(dt, coObjects);
@@ -488,6 +489,13 @@ int CMario::GetAniIdRacoon()
 	if (aniId == -1) {
 		aniId = ID_ANI_RACOON_IDLE_RIGHT;
 	}
+	if (IsAttack)
+	{
+		if (level == MARIO_LEVEL_RACOON) {
+			if (nx > 0)aniId = ID_ANI_RACOON_ATTACK_RIGHT;
+			else aniId = ID_ANI_RACOON_ATTACK_LEFT;
+		}
+	}
 
 	return aniId;
 }
@@ -595,6 +603,11 @@ void CMario::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
+	if (!IsAttack && level == MARIO_LEVEL_RACOON)
+	{
+		animations->Get(ID_ANI_RACOON_ATTACK_LEFT)->ResetAni();
+		animations->Get(ID_ANI_RACOON_ATTACK_RIGHT)->ResetAni();
+	}
 
 	if (state == MARIO_STATE_DIE)
 		aniId = ID_ANI_MARIO_DIE;
@@ -608,6 +621,8 @@ void CMario::Render()
 	animations->Get(aniId)->Render(x, y);
 
 	//RenderBoundingBox();
+
+	if (IsAttack)tail->Render();
 
 	DebugOutTitle(L"Coins: %d", coin);
 }
