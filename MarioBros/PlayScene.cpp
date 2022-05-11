@@ -345,7 +345,10 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->SetX(MARIO_BIG_BBOX_WIDTH / 2);
 	}
-	Camera::GetInstance()->SetCamPos(cx, 240.0f /*cy*/);
+	if (!Camera::GetInstance()->IsFollowingMario)
+		Camera::GetInstance()->SetCamPos(cx, 240.0f /*cy*/);
+	else
+		Camera::GetInstance()->SetCamPosX(cx);
 
 	PurgeDeletedObjects();
 }

@@ -7,6 +7,7 @@ class Camera
 {
 public:
 	float cam_x, cam_y, cam_vx, cam_vy = 0;
+	bool IsFollowingMario;
 public:
 	static Camera* __instance;
 
@@ -36,10 +37,16 @@ public:
 	{
 		return cam_y;
 	}
+	void SetCamPosX(float x)
+	{
+		cam_x = x;
+	}
 
 	bool IsInCam(float objX, float objY)
 	{
 		return !(objX < cam_x || objX - cam_x>SCREEN_WIDTH || objY < cam_y || objY - cam_y > SCREEN_HEIGHT);
 	}
+	
+	void Update(DWORD dt);
 };
 
