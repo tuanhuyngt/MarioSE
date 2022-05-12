@@ -6,6 +6,7 @@
 #include "MarioTail.h"
 
 #include "debug.h"
+#include "Koopas.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.3f
@@ -76,6 +77,15 @@
 
 #define ID_ANI_MARIO_KICKKOOPAS_RIGHT	1701
 #define ID_ANI_MARIO_KICKKOOPAS_LEFT	1700
+
+#define ID_ANI_MARIO_HOLDKOOPAS_IDLE_RIGHT	1702
+#define ID_ANI_MARIO_HOLDKOOPAS_IDLE_LEFT	1703
+
+#define ID_ANI_MARIO_HOLDKOOPAS_WALK_RIGHT	1704
+#define ID_ANI_MARIO_HOLDKOOPAS_WALK_LEFT	1705
+
+#define ID_ANI_MARIO_HOLDKOOPAS_JUMP_RIGHT	1706
+#define ID_ANI_MARIO_HOLDKOOPAS_JUMP_LEFT	1707
 // SMALL MARIO
 #define ID_ANI_MARIO_SMALL_IDLE_RIGHT 1100
 #define ID_ANI_MARIO_SMALL_IDLE_LEFT 1102
@@ -131,6 +141,15 @@
 
 #define ID_ANI_RACOON_KICKKOOPAS_RIGHT	1923
 #define ID_ANI_RACOON_KICKKOOPAS_LEFT	1924
+
+#define ID_ANI_RACOON_HOLDINGKOOPAS_IDLE_RIGHT	1925
+#define ID_ANI_RACOON_HOLDINGKOOPAS_IDLE_LEFT	1926
+
+#define ID_ANI_RACOON_HOLDINGKOOPAS_WALKING_RIGHT	1927
+#define ID_ANI_RACOON_HOLDINGKOOPAS_WALKING_LEFT	1928
+
+#define ID_ANI_RACOON_HOLDINGKOOPAS_JUMPING_RIGHT	1929
+#define ID_ANI_RACOON_HOLDINGKOOPAS_JUMPING_LEFT	1930
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -170,8 +189,10 @@ class CMario : public CGameObject
 	DWORD FlyingTime;
 
 	int speedStack;
-
+	bool isHoldingKoopas;
+	
 	MarioTail* tail;
+	Koopas* koopasHold;
 
 	DWORD SpeedStackTime;
 
@@ -213,6 +234,8 @@ public:
 		isOnPlatform = false;
 		coin = 0;
 		speedStack = 0;
+		AttackTime = 0;
+		SpeedStackTime = 0;
 		tail = new MarioTail();
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

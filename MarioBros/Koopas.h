@@ -32,7 +32,7 @@
 #define KOOPAS_BBOX_HEIGHT 28
 #define KOOPAS_BBOX_HIDDEN 16
 
-#define KOOPAS_WAITING_REBORN_TIME	4000
+#define KOOPAS_WAITING_REBORN_TIME	15000
 
 class Koopas : public CGameObject
 {
@@ -41,6 +41,7 @@ protected:
 	bool ParaKoopas;
 	float ay;
 	bool InShell;
+	bool isHold;
 	bool IsAttackedByTail;
 	DWORD phaseTime;
 
@@ -83,4 +84,9 @@ public:
 	bool IsAttack;
 	Koopas(float x, float y, int Level);
 	virtual void SetState(int state);
+
+	void SetHolding(bool value)
+	{
+		this->isHold = value;
+	}
 };

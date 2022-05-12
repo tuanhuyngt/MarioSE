@@ -5,38 +5,46 @@
 
 void Koopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state != KOOPAS_STATE_DIE_BY_SHELL)
-		if (!InShell) {
-			top = y - KOOPAS_BBOX_HEIGHT / 2;
-			bottom = top + KOOPAS_BBOX_HEIGHT;
+	if (!isHold)
+	{
+		if (state != KOOPAS_STATE_DIE_BY_SHELL)
+		{
+			if (!InShell) {
+				top = y - KOOPAS_BBOX_HEIGHT / 2;
+				bottom = top + KOOPAS_BBOX_HEIGHT;
+			}
+			else {
+				top = y - KOOPAS_BBOX_HIDDEN / 2;
+				bottom = top + KOOPAS_BBOX_HIDDEN;
+			}
+			left = x - KOOPAS_BBOX_WIDTH / 2;
+			right = left + KOOPAS_BBOX_WIDTH;
 		}
-		else {
-			top = y - KOOPAS_BBOX_HIDDEN / 2;
-			bottom = top + KOOPAS_BBOX_HIDDEN;
-		}
-	left = x - KOOPAS_BBOX_WIDTH / 2;
-	right = left + KOOPAS_BBOX_WIDTH;
+	}
 
 }
 
 void Koopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	HandleKoopasReborn();
-	vy += ay * dt;
-	if (state == KOOPAS_STATE_WALKING && level == SMART_KOOPAS)
+	if (!isHold)
 	{
-		if (vx > 0)NavBox->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
-		else NavBox->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
-		NavBox->Update(dt, coObjects);
-		float navX, navY;
-		NavBox->GetPosition(navX, navY);
-		if (navY - y >= KOOPAS_NAVBOX_DISTANCE)vx = -vx;
+		vy += ay * dt;
+		if (state == KOOPAS_STATE_WALKING && level == SMART_KOOPAS)
+		{
+			if (vx > 0)NavBox->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
+			else NavBox->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
+			NavBox->Update(dt, coObjects);
+			float navX, navY;
+			NavBox->GetPosition(navX, navY);
+			if (navY - y >= KOOPAS_NAVBOX_DISTANCE)vx = -vx;
 
+		}
+		CCollision::GetInstance()->Process(this, dt, coObjects);
 	}
-	if (state == KOOPAS_STATE_ATTACKED_BY_TAIL) {
+	else if (state == KOOPAS_STATE_ATTACKED_BY_TAIL) {
 		SetState(KOOPAS_STATE_INSHELL);
-	}
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	}	
 }
 
 void Koopas::Render()
@@ -145,6 +153,7 @@ Koopas::Koopas(float x, float y, int Level) :CGameObject(x, y)
 	SetState(KOOPAS_STATE_WALKING);
 	NavBox = new NavigationBox(x, y);
 	IsAttackedByTail = false;
+	isHold = false;
 	ay = KOOPAS_GRAVITY;
 }
 
@@ -156,6 +165,7 @@ void Koopas::SetState(int state)
 		vx = -KOOPAS_WALKING_SPEED;
 		IsAttack = true;
 		InShell = false;
+		isHold = false;
 		y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HIDDEN) / 2;
 		break;
 	case KOOPAS_STATE_INSHELL:

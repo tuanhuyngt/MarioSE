@@ -90,6 +90,10 @@ public:
 		this->x = x;
 	}
 
+	void SetY(float y) {
+		this->y = y;
+	}
+
 	void SetNX(float nx) {
 		this->nx = nx;
 	}
