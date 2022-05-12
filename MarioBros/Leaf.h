@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "debug.h"
-#define LEAF_GRAVITY 0.0006f
+#define LEAF_GRAVITY 0.001f
 
 #define LEAF_WIDTH  16
 #define LEAF_HEIGHT  14
