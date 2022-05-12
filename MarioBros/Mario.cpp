@@ -289,6 +289,12 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 					break;
 				}
 			}
+			else {
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+				koopas->SetSpeed(0,0);
+				koopas->level = NORMAL_KOOPAS;
+				koopas->SetState(KOOPAS_STATE_WALKING);
+			}
 		}
 	}
 	else // hit by Koopas
@@ -971,17 +977,17 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	{
 		if (isSitting)
 		{
-			left = x - MARIO_BIG_SITTING_BBOX_WIDTH / 2;
-			top = y - MARIO_BIG_SITTING_BBOX_HEIGHT / 2;
-			right = left + MARIO_BIG_SITTING_BBOX_WIDTH;
-			bottom = top + MARIO_BIG_SITTING_BBOX_HEIGHT;
+			left = x - MARIO_BIG_SITTING_BBOX_WIDTH / 2 - 2;
+			top = y - MARIO_BIG_SITTING_BBOX_HEIGHT / 2 - 2;
+			right = left + MARIO_BIG_SITTING_BBOX_WIDTH + 2;
+			bottom = top + MARIO_BIG_SITTING_BBOX_HEIGHT + 2;
 		}
 		else
 		{
 			if (nx > 0)
-				left = x - MARIO_BIG_BBOX_WIDTH / 2 + 1;
+				left = x - MARIO_BIG_BBOX_WIDTH / 2 + 4;
 			else
-				left = x - MARIO_BIG_BBOX_WIDTH / 2 + 2;
+				left = x - MARIO_BIG_BBOX_WIDTH / 2 - 2;
 			right = left + MARIO_BIG_BBOX_WIDTH - 2;
 			top = y - MARIO_BIG_BBOX_HEIGHT / 2;
 			bottom = top + MARIO_BIG_BBOX_HEIGHT;
