@@ -21,6 +21,7 @@ void Koopas::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void Koopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	HandleKoopasReborn();
 	vy += ay * dt;
 	if (state == KOOPAS_STATE_WALKING && level == SMART_KOOPAS)
 	{
@@ -122,6 +123,7 @@ void Koopas::GetKoopasAni(int& IdAni)
 	}
 	else if (state == KOOPAS_STATE_INSHELL || state == KOOPAS_STATE_DIE_BY_SHELL || state == KOOPAS_STATE_ATTACKED_BY_TAIL)IdAni = ID_ANI_KOOPAS_INSHELL;
 	else if (state == KOOPAS_STATE_INSHELL_ATTACK)IdAni = ID_ANI_KOOPAS_INSHELL_ATTACK;
+	else if (state == KOOPAS_STATE_REBORN) IdAni = ID_ANI_KOOPAS_REBORN;
 
 }
 
@@ -134,6 +136,7 @@ void Koopas::GetRedKoopasAni(int& IdAni)
 	}
 	else if (state == KOOPAS_STATE_INSHELL || state == KOOPAS_STATE_DIE_BY_SHELL || state == KOOPAS_STATE_ATTACKED_BY_TAIL)IdAni = ID_ANI_REDKOOPAS_INSHELL;
 	else if (state == KOOPAS_STATE_INSHELL_ATTACK)IdAni = ID_ANI_REDKOOPAS_INSHELL_ATTACK;
+	else if (state == KOOPAS_STATE_REBORN) IdAni = ID_ANI_REDKOOPAS_REBORN;
 }
 
 Koopas::Koopas(float x, float y, int Level) :CGameObject(x, y)
@@ -159,6 +162,7 @@ void Koopas::SetState(int state)
 		vx = 0;
 		InShell = true;
 		IsAttack = false;
+		WaitingRebornTime = GetTickCount64();
 		break;
 	case KOOPAS_STATE_INSHELL_ATTACK:
 		vx = nx * KOOPAS_WALKING_SPEED * 4;
@@ -177,6 +181,9 @@ void Koopas::SetState(int state)
 		InShell = true;
 		IsAttack = false;
 		IsAttackedByTail = true;
+		break;
+	case KOOPAS_STATE_REBORN:
+		ReborningTime = GetTickCount64();
 		break;
 	default:
 		break;
