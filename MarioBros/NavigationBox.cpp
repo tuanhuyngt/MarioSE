@@ -6,7 +6,7 @@ void NavigationBox::GetBoundingBox(float& left, float& top, float& right, float&
 	left = x - NAVIGATION_BBOX_WIDTH / 2;
 	top = y - NAVIGATION_BBOX_HEIGHT / 2;
 	right = left + NAVIGATION_BBOX_WIDTH;
-	bottom = top + NAVIGATION_BBOX_HEIGHT;
+	bottom = top + NAVIGATION_BBOX_HEIGHT - 2;
 }
 
 void NavigationBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

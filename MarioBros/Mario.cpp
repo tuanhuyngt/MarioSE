@@ -244,8 +244,9 @@ void CMario::OnCollisionWithItem(LPCOLLISIONEVENT e)
 	}
 	else if (dynamic_cast<Leaf*>(e->obj))
 	{
-		if (level == MARIO_LEVEL_BIG)
-			level = MARIO_LEVEL_RACOON;
+		if (level == MARIO_LEVEL_SMALL)
+			y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+		SetState(MARIO_STATE_TRANSFORM_RACOON);
 		e->obj->Delete();
 	}
 }
@@ -896,8 +897,8 @@ void CMario::HandleMarioIsAttacked()
 {
 	if (level > MARIO_LEVEL_BIG)
 	{
-		level = MARIO_LEVEL_BIG;
-		StartUntouchable();		
+		StartUntouchable();
+		SetState(RACOON_STATE_TRANSFORM_MARIO);	
 	}
 	else if (level == MARIO_LEVEL_BIG)
 	{

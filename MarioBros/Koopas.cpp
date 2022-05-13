@@ -26,8 +26,7 @@ void Koopas::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void Koopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (y > 500)
-		y = 1000;
+
 	HandleKoopasReborn();
 	if (!isHold)
 	{
@@ -46,7 +45,7 @@ void Koopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else if (state == KOOPAS_STATE_ATTACKED_BY_TAIL) {
 		SetState(KOOPAS_STATE_INSHELL);
-	}	
+	}
 }
 
 void Koopas::Render()
@@ -57,7 +56,7 @@ void Koopas::Render()
 	else if (level == PARA_KOOPAS)GetParaKoopasAni(aniId);
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
-	//NavBox->Render();
+	NavBox->Render();
 }
 
 void Koopas::OnNoCollision(DWORD dt)
@@ -75,10 +74,12 @@ void Koopas::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt)
 			if (e->ny < 0)
 				vy = -KOOPAS_JUMP_SPEED;
 		}
-		vy = 0;
-		if (state == KOOPAS_STATE_ATTACKED_BY_TAIL)
-		{
-			SetState(KOOPAS_STATE_INSHELL);
+		else {
+			vy = 0;
+			if (state == KOOPAS_STATE_ATTACKED_BY_TAIL)
+			{
+				SetState(KOOPAS_STATE_INSHELL);
+			}
 		}
 	}
 	else if (e->nx != 0 && e->obj->IsBlocking())
