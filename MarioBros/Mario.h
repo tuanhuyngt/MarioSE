@@ -9,10 +9,10 @@
 #include "Koopas.h"
 
 #define MARIO_WALKING_SPEED		0.1f
-#define MARIO_RUNNING_SPEED		0.2f
+#define MARIO_RUNNING_SPEED		0.3f
 
 #define MARIO_ACCEL_WALK_X	0.0005f
-#define MARIO_ACCEL_SLOWING_DOWN_X	0.00015f
+#define MARIO_ACCEL_SLOWING_DOWN_X	0.00035f
 #define MARIO_ACCEL_RUN_X	0.0007f
 #define MARIO_FRICTION		0.006f
 
@@ -50,6 +50,8 @@
 #define MARIO_STATE_SLOW_FALLING	302
 
 #define MARIO_STATE_FLYING	900
+
+#define MARIO_STATE_RELEASE_KOOPAS	1000
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -236,7 +238,7 @@ public:
 		isFlying = false;
 		IsAttack = false;
 		IsKickKoopas = false;
-		level = MARIO_LEVEL_RACOON;
+		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
@@ -301,6 +303,11 @@ public:
 		return isFlying;
 	}
 
+	bool IsSitting()
+	{
+		return isSitting;
+	}
+
 	int GetSpeedStack()
 	{
 		return speedStack;
@@ -309,6 +316,10 @@ public:
 	{
 		y = 240;
 		level = MARIO_LEVEL_RACOON;
+	}
+
+	bool CheckMarioHoldKoopas() {
+		return isHoldingKoopas;
 	}
 
 	void HandleMarioIsAttacked();

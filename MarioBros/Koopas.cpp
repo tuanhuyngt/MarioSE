@@ -11,7 +11,7 @@ void Koopas::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		{
 			if (!InShell) {
 				top = y - KOOPAS_BBOX_HEIGHT / 2;
-				bottom = top + KOOPAS_BBOX_HEIGHT;
+				bottom = top + KOOPAS_BBOX_HEIGHT - 2;
 			}
 			else {
 				top = y - KOOPAS_BBOX_HIDDEN / 2;

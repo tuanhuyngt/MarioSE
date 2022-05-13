@@ -893,6 +893,7 @@ void CMario::SetState(int state)
 		{
 			IsAttack = true;
 			AttackTime = GetTickCount64();
+			tail->IsAttack = true;
 		}
 		break;
 
@@ -923,6 +924,17 @@ void CMario::SetState(int state)
 			isFlying = true;
 			FlyingTime = GetTickCount64();
 		}
+		break;
+	case MARIO_STATE_RELEASE_KOOPAS:
+		isHoldingKoopas = false;
+		koopasHold->SetHolding(false);
+		koopasHold->SetNX(nx);
+		float koopasY;
+		if (level == MARIO_LEVEL_SMALL)
+			koopasY = y - (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+		else koopasY = y;
+		koopasHold->SetPosition(koopasHold->GetX() + KOOPAS_BBOX_WIDTH / 8, koopasY);
+		koopasHold->SetState(KOOPAS_STATE_INSHELL_ATTACK);
 		break;
 	}
 

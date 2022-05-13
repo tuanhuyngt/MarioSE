@@ -38,7 +38,7 @@
 
 #define KOOPAS_JUMP_SPEED 0.25
 
-#define KOOPAS_WAITING_REBORN_TIME	8000
+#define KOOPAS_WAITING_REBORN_TIME	7000
 
 class Koopas : public CGameObject
 {
