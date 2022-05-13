@@ -29,6 +29,7 @@
 #define MARIO_KICK_KOOPAS_TIME 200
 #define MARIO_SLOWFALLING_TIME 300
 #define RACOON_ATTACK_TIME 250
+#define RACOON_IS_ATTACKED_TIME	600
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
 #define MARIO_STATE_WALKING_RIGHT	100
@@ -51,6 +52,8 @@
 
 #define MARIO_STATE_FLYING	900
 
+#define MARIO_STATE_TRANSFORM_RACOON	901
+#define RACOON_STATE_TRANSFORM_MARIO		902
 #define MARIO_STATE_RELEASE_KOOPAS	1000
 #pragma region ANIMATION_ID
 
@@ -204,6 +207,7 @@ class CMario : public CGameObject
 	MarioTail* tail;
 	Koopas* koopasHold;
 
+	DWORD effectTime;
 	DWORD SpeedStackTime;
 
 	int level; 
@@ -264,7 +268,6 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
-
 	bool CheckMarioIsOnPlatform() { return isOnPlatform; };
 
 	void SetLevel(int l);
@@ -322,5 +325,14 @@ public:
 		return isHoldingKoopas;
 	}
 
+	void HandleMarioIsFlying(DWORD dt);
 	void HandleMarioIsAttacked();
+	void HandleMarioRunning();
+	void HandleMarioStateIdle();
+	void HandleMarioFalling();
+	void HandleMarioKickKoopas();
+	void HandleMarioHoldingKoopas();
+	void HandleRacoonAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void HandleMarioTransformRacoon();
+	void HandleMarioUntouchable();
 };
