@@ -39,8 +39,11 @@ public:
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) {
 
-		if (startY - y >= QUESTION_BRICK_UP)
+		if (startY - y > QUESTION_BRICK_UP)
+		{
 			vy = -vy;
+			y = startY - QUESTION_BRICK_UP;
+		}
 		if (vy > 0 && y >= startY) {
 			SetState(QUESTION_BRICK_STATE_INNITED);
 		}
@@ -48,7 +51,7 @@ public:
 		{
 			if (coinUpTime == 0)
 			{
-				coin = new CCoin(x, y - 16);
+				coin = new CCoin(x, y - 16, 1);
 				coin->SetSpeed(0, -COIN_UP_VY);
 				coinUpTime = GetTickCount64();
 			}

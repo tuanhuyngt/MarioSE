@@ -164,7 +164,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 	case OBJECT_TYPE_FIREPIRANHAPLANT: {obj = new FirePiranhaPlant(x, y); break; }
-	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
+	case OBJECT_TYPE_INNIT_COIN: {
+		int type = atoi(tokens[3].c_str());
+		obj = new CCoin(x, y, type);
+		break;
+	}
 	case OBJECT_TYPE_PIPE: {
 		int width = atoi(tokens[3].c_str());
 		int height = atoi(tokens[4].c_str());
