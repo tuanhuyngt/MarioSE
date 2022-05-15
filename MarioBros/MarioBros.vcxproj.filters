@@ -123,6 +123,9 @@
     <ClCompile Include="QuestionBrick.cpp">
       <Filter>Items</Filter>
     </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="QuestionBrick.h">
       <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

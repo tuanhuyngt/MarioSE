@@ -17,6 +17,7 @@
 #include "Koopas.h"
 #include "Pipe.h"
 #include "FirePiranhaPlant.h"
+#include "HUD.h"
 
 using namespace std;
 
@@ -366,6 +367,8 @@ void CPlayScene::Render()
 	for (int i = 1; i < objects.size(); i++)
 		objects[i]->Render();
 	objects[0]->Render();
+
+	HUD::GetInstance()->Draw();
 }
 
 /*
