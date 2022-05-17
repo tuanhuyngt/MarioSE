@@ -126,6 +126,9 @@
     <ClCompile Include="HUD.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="PiranhaPlant.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -238,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="HUD.h">
       <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="PiranhaPlant.h">
+      <Filter>Enemies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

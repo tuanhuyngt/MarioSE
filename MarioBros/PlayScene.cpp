@@ -17,6 +17,7 @@
 #include "Koopas.h"
 #include "Pipe.h"
 #include "FirePiranhaPlant.h"
+#include "PiranhaPlant.h"
 #include "HUD.h"
 
 using namespace std;
@@ -165,6 +166,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 	case OBJECT_TYPE_FIREPIRANHAPLANT: {obj = new FirePiranhaPlant(x, y); break; }
+	case OBJECT_TYPE_PIRANHAPLANT: {obj = new PiranhaPlant(x, y); break; }
 	case OBJECT_TYPE_INNIT_COIN: {
 		int type = atoi(tokens[3].c_str());
 		obj = new CCoin(x, y, type);
