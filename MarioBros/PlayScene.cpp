@@ -176,6 +176,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int width = atoi(tokens[3].c_str());
 		int height = atoi(tokens[4].c_str());
 		obj = new Pipe(x, y, width, height);
+		Pipes.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_PLATFORM:
@@ -366,9 +367,18 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	map->Draw();
+
 	for (int i = 1; i < objects.size(); i++)
-		objects[i]->Render();
+	{
+		if (!dynamic_cast<Pipe*>(objects[i]))
+			objects[i]->Render();
+	}
 	objects[0]->Render();
+
+	for (int i = 0; i < Pipes.size(); i++)
+	{
+		Pipes[i]->Render();
+	}
 
 	HUD::GetInstance()->Draw();
 }

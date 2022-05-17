@@ -12,6 +12,7 @@
 #include "Collision.h"
 #include "Koopas.h"
 #include "FirePiranhaPlant.h"
+#include "PiranhaPlant.h"
 #include "Leaf.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -109,6 +110,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt)
 	else if (dynamic_cast<Koopas*>(e->obj))
 		OnCollisionWithKoopas(e);
 	else if (dynamic_cast<FirePiranhaPlant*>(e->obj))
+		OnCollisionWithPlant(e);
+	else if (dynamic_cast<PiranhaPlant*>(e->obj))
 		OnCollisionWithPlant(e);
 	else if (e->obj->CheckIsItem())
 		OnCollisionWithItem(e);
@@ -1041,6 +1044,7 @@ void CMario::HandleMarioUntouchable()
 		untouchable = 0;
 	}
 }
+
 
 void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
