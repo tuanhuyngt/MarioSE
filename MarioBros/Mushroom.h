@@ -27,23 +27,8 @@ public:
         ItemType = 1;
         isitem = true;
     }
-    void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-        if (isInnited)
-        {
-            vy += MUSHROOM_GRAVITY * dt;
-        }
-        else if (vy != 0)
-        {
-            if (startY - y > MUSHROOM_HEIGHT + 0.5)
-                SetState(MUSHROOOM_STATE_INNITED);
-        }
-        CCollision::GetInstance()->Process(this, dt, coObjects);
 
-    }
-    void OnNoCollision(DWORD dt) {
-        x += vx * dt;
-        y += vy * dt;
-    }
+    void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
     void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);
 
@@ -58,6 +43,10 @@ public:
     }
     int IsCollidable() {
         return 1;
+    }
+    void OnNoCollision(DWORD dt) {
+        x += vx * dt;
+        y += vy * dt;
     }
 };
 
