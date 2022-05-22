@@ -3,6 +3,8 @@
 #include "AssetIDs.h"
 
 #include "PlayScene.h"
+
+#include "BreakableBrick.h"
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
@@ -177,6 +179,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int height = atoi(tokens[4].c_str());
 		obj = new Pipe(x, y, width, height);
 		Pipes.push_back(obj);
+		break;
+	}
+	case OBJECT_TYPE_BREAKBLEBRICK: {
+		obj = new BreakableBrick(x, y);
 		break;
 	}
 	case OBJECT_TYPE_PLATFORM:

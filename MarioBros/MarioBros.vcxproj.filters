@@ -129,6 +129,9 @@
     <ClCompile Include="PiranhaPlant.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="BreakableBrick.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="PiranhaPlant.h">
       <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableBrick.h">
+      <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
