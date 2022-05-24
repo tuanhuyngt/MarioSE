@@ -2,6 +2,8 @@
 #include "debug.h"
 
 #include "Mario.h"
+
+#include "BreakableBrick.h"
 #include "Game.h"
 
 #include "Goomba.h"
@@ -115,6 +117,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt)
 		OnCollisionWithPlant(e);
 	else if (e->obj->CheckIsItem())
 		OnCollisionWithItem(e);
+	else if (dynamic_cast<BreakableBrick*>(e->obj))
+		OnCollisionWithBreakableBrick(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -263,7 +267,24 @@ void CMario::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 	}
 }
 
-
+void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
+{
+	BreakableBrick* breakableBrick = dynamic_cast<BreakableBrick*>(e->obj);
+	if (breakableBrick->GetType() != OBJECT_TYPE_COIN)
+	{
+		if (e->ny > 0)
+		{
+			if (level == MARIO_LEVEL_SMALL)
+			{
+				if (breakableBrick->GetY() == breakableBrick->startY)
+					e->obj->SetState(BREAKABLE_BRICK_STATE_IS_UP);
+			}
+			else {
+					e->obj->SetState(BREAKABLE_BRICK_STATE_BREAK_DOWN);
+			}
+		}
+	}
+}
 
 //
 // Get animation ID for small Mario

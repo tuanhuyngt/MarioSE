@@ -132,6 +132,9 @@
     <ClCompile Include="BreakableBrick.cpp">
       <Filter>Items</Filter>
     </ClCompile>
+    <ClCompile Include="BreakableBrickEffect.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -249,6 +252,9 @@
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="BreakableBrick.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableBrickEffect.h">
       <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>

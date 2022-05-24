@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Coin.h"
+#include "BreakableBrickEffect.h"
 
 #define BRICK_BBOX_WIDTH	16
 #define BRICK_BBOX_HEIGHT	16
@@ -15,6 +16,9 @@
 #define ID_ANI_BREAKABLE_BRICK 10001
 #define ID_ANI_BREAKABLE_BRICK_IS_UP	10002
 
+#define INNIT_VX_BREAKABLE_BRICK_EFFECT	0.05f
+#define INNIT_VY_BREAKABLE_BRICK_EFFECT	0.1f
+
 
 #define BREAKBLE_BRICK_VY	0.05f
 class BreakableBrick :
@@ -26,6 +30,10 @@ public:
 	bool InitCoin;
 	ULONGLONG ChangeBackToBrickTime;
 	bool isBreakDown;
+	BreakableBrickEffect* piece1;
+	BreakableBrickEffect* piece2;
+	BreakableBrickEffect* piece3;
+	BreakableBrickEffect* piece4;
 
 	BreakableBrick(float x, float y) : CGameObject(x, y) {
 		startY = y;
@@ -34,6 +42,10 @@ public:
 		InitCoin = isBreakDown = false;
 		ChangeBackToBrickTime = 0;
 		isBlocking = 1;
+		piece1 = new BreakableBrickEffect(x, y, -INNIT_VX_BREAKABLE_BRICK_EFFECT, -INNIT_VY_BREAKABLE_BRICK_EFFECT * 2);
+		piece2 = new BreakableBrickEffect(x, y, INNIT_VX_BREAKABLE_BRICK_EFFECT, -INNIT_VY_BREAKABLE_BRICK_EFFECT * 2);
+		piece3 = new BreakableBrickEffect(x, y, -INNIT_VX_BREAKABLE_BRICK_EFFECT, -INNIT_VY_BREAKABLE_BRICK_EFFECT);
+		piece4 = new BreakableBrickEffect(x, y, INNIT_VX_BREAKABLE_BRICK_EFFECT, -INNIT_VY_BREAKABLE_BRICK_EFFECT);
 	}
 
 	void Render();
@@ -49,6 +61,13 @@ public:
 		{
 			y = startY;
 			vy = 0;
+		}
+		if (state == BREAKABLE_BRICK_STATE_BREAK_DOWN)
+		{
+			piece1->Update(dt);
+			piece2->Update(dt);
+			piece3->Update(dt);
+			piece4->Update(dt);
 		}
 	}
 	void GetBoundingBox(float& l, float& t, float& r, float& b) {

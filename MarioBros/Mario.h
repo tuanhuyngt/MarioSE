@@ -222,16 +222,6 @@ class CMario : public CGameObject
 	bool IsKickKoopas;
 	DWORD KickKoopasTime;
 
-	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
-	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
-	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
-	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
-	void OnCollisionWithItem(LPCOLLISIONEVENT e);
-
-	int GetAniIdBig();
-	int GetAniIdSmall();
-	int GetAniIdRacoon();
-
 public:
 	CMario(float x, float y) : CGameObject(x, y)
 	{
@@ -264,10 +254,6 @@ public:
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
 	int IsUntouchable() { return untouchable; }
 
-	void OnNoCollision(DWORD dt);
-	void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);
-	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
-	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 	bool CheckMarioIsOnPlatform() { return isOnPlatform; };
 
 	void SetLevel(int l);
@@ -299,7 +285,6 @@ public:
 	int GetMarioLevel() {
 		return level;
 	}
-	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	bool IsFlying()
 	{
@@ -335,4 +320,21 @@ public:
 	void HandleRacoonAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void HandleMarioTransformRacoon();
 	void HandleMarioUntouchable();
+
+	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
+	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
+	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithItem(LPCOLLISIONEVENT e);
+	void OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e);
+	void OnNoCollision(DWORD dt);
+	void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);
+	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
+	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
+
+	int GetAniIdBig();
+	int GetAniIdSmall();
+	int GetAniIdRacoon();
+
+	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

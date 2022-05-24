@@ -1,4 +1,6 @@
 #include "MarioTail.h"
+
+#include "BreakableBrick.h"
 #include "debug.h"
 #include "Goomba.h"
 #include "QuestionBrick.h"
@@ -24,6 +26,8 @@ void MarioTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				OnCollisionWithQuestionBrick(coObjects->at(i));
 			else if (dynamic_cast<Koopas*>(coObjects->at(i)))
 				OnCollisionWithKoopas(coObjects->at(i));
+			else if (coObjects->at(i)->GetType() == OBJECT_TYPE_BREAKABLE_BRICK)
+				OnCollisionWithBreakableBrick(coObjects->at(i));
 		}
 	}
 }
@@ -48,6 +52,13 @@ void MarioTail::OnCollisionWithKoopas(LPGAMEOBJECT& obj)
 	koopas->SetNX(nx);
 	if (koopas->level == PARA_KOOPAS) koopas->level = NORMAL_KOOPAS;
 	koopas->SetState(KOOPAS_STATE_ATTACKED_BY_TAIL);
+}
+
+void MarioTail::OnCollisionWithBreakableBrick(LPGAMEOBJECT& obj)
+{
+	BreakableBrick* breakableBrick = dynamic_cast<BreakableBrick*>(obj);
+	breakableBrick->SetState(BREAKABLE_BRICK_STATE_BREAK_DOWN);
+	IsAttack = false;
 }
 
 void MarioTail::Render()
