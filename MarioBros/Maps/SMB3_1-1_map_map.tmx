@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="176" height="44" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
  <editorsettings>
-  <export target="SMB3_1-1_map_data.csv" format="csv"/>
+  <export target="../../../../Desktop/SMB3_1-1_map_data.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" name="SMB3_1-1_map_bank.png" tilewidth="16" tileheight="16" tilecount="110" columns="11">
   <image source="SMB3_1-1_map_bank.png" width="176" height="160"/>
@@ -4180,10 +4180,10 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -4355,15 +4355,15 @@
    <tile gid="49"/>
    <tile gid="42"/>
    <tile gid="1"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="13"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="73"/>
@@ -4530,17 +4530,17 @@
    <tile gid="67"/>
    <tile gid="56"/>
    <tile gid="57"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="13"/>
-   <tile gid="13"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="20"/>
    <tile gid="21"/>
