@@ -135,6 +135,9 @@
     <ClCompile Include="BreakableBrickEffect.cpp">
       <Filter>Items</Filter>
     </ClCompile>
+    <ClCompile Include="ButtonP.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -255,6 +258,9 @@
       <Filter>Items</Filter>
     </ClInclude>
     <ClInclude Include="BreakableBrickEffect.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonP.h">
       <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>

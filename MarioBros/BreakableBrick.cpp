@@ -19,6 +19,8 @@ void BreakableBrick::Render()
 	}
 	else {
 		aniId = ID_ANI_BREAKABLE_BRICK;
+		if (buttonCreated)
+			aniId = ID_ANI_BREAKABLE_BRICK_IS_UP;
 		animations->Get(aniId)->Render(x, y);
 	}
 

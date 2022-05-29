@@ -60,6 +60,7 @@ class CGame
 	void _ParseSection_SCENES(string line);
 
 public:
+	bool buttonIsPushed = false;
 	// Init DirectX, Sprite Handler
 	void Init(HWND hWnd, HINSTANCE hInstance);
 

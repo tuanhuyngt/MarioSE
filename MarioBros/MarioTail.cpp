@@ -57,7 +57,13 @@ void MarioTail::OnCollisionWithKoopas(LPGAMEOBJECT& obj)
 void MarioTail::OnCollisionWithBreakableBrick(LPGAMEOBJECT& obj)
 {
 	BreakableBrick* breakableBrick = dynamic_cast<BreakableBrick*>(obj);
-	breakableBrick->SetState(BREAKABLE_BRICK_STATE_BREAK_DOWN);
+	if (breakableBrick->haveButton && !breakableBrick->buttonCreated)
+	{
+		breakableBrick->SetState(BREAKABLE_BRICK_STATE_CREATE_BUTTON);
+	}
+	else if (!breakableBrick->haveButton) {
+		breakableBrick->SetState(BREAKABLE_BRICK_STATE_BREAK_DOWN);
+	}
 	IsAttack = false;
 }
 

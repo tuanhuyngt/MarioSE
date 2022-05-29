@@ -2,10 +2,13 @@
 #include "GameObject.h"
 #include "Coin.h"
 #include "BreakableBrickEffect.h"
+#include "ButtonP.h"
 
 #define BRICK_BBOX_WIDTH	16
 #define BRICK_BBOX_HEIGHT	16
+#define BREAKABLE_BRICK_STATE_TRANSFORMS_COIN	1
 #define BREAKABLE_BRICK_STATE_BREAK_DOWN	2
+#define BREAKABLE_BRICK_STATE_CREATE_BUTTON	3
 #define COIN_STATE_TRANSFORMS_BRICK	4
 #define BREAKABLE_BRICK_STATE_IS_UP	5
 
@@ -29,15 +32,19 @@ public:
 	float startY;
 	bool InitCoin;
 	ULONGLONG ChangeBackToBrickTime;
-	bool isBreakDown;
+	bool haveButton = false;
+	ButtonP* buttonP;
+	bool buttonCreated, isBreakDown;
 	BreakableBrickEffect* piece1;
 	BreakableBrickEffect* piece2;
 	BreakableBrickEffect* piece3;
 	BreakableBrickEffect* piece4;
 
-	BreakableBrick(float x, float y) : CGameObject(x, y) {
+	BreakableBrick(float x, float y, bool HaveButton) : CGameObject(x, y) {
 		startY = y;
+		haveButton = HaveButton;
 		type = OBJECT_TYPE_BREAKABLE_BRICK;
+		buttonCreated = false;
 		vy = 0;
 		InitCoin = isBreakDown = false;
 		ChangeBackToBrickTime = 0;
@@ -46,6 +53,7 @@ public:
 		piece2 = new BreakableBrickEffect(x, y, INNIT_VX_BREAKABLE_BRICK_EFFECT, -INNIT_VY_BREAKABLE_BRICK_EFFECT * 2);
 		piece3 = new BreakableBrickEffect(x, y, -INNIT_VX_BREAKABLE_BRICK_EFFECT, -INNIT_VY_BREAKABLE_BRICK_EFFECT);
 		piece4 = new BreakableBrickEffect(x, y, INNIT_VX_BREAKABLE_BRICK_EFFECT, -INNIT_VY_BREAKABLE_BRICK_EFFECT);
+		buttonP = new ButtonP();
 	}
 
 	void Render();
@@ -61,6 +69,22 @@ public:
 		{
 			y = startY;
 			vy = 0;
+		}
+		if (!isBreakDown) {
+			if (!haveButton)
+			{
+				if (CGame::GetInstance()->buttonIsPushed && !InitCoin)
+				{
+					SetState(BREAKABLE_BRICK_STATE_TRANSFORMS_COIN);
+				}
+			}
+			if (state == BREAKABLE_BRICK_STATE_TRANSFORMS_COIN)
+			{
+				if (GetTickCount64() - ChangeBackToBrickTime >= 5000)
+				{
+					SetState(COIN_STATE_TRANSFORMS_BRICK);
+				}
+			}
 		}
 		if (state == BREAKABLE_BRICK_STATE_BREAK_DOWN)
 		{
@@ -82,11 +106,28 @@ public:
 
 	void SetState(int state) {
 		switch (state) {
+		case BREAKABLE_BRICK_STATE_TRANSFORMS_COIN:
+			type = OBJECT_TYPE_COIN;
+			ChangeBackToBrickTime = GetTickCount64();
+			isBlocking = 0;
+			InitCoin = true;
+			break;
 		case BREAKABLE_BRICK_STATE_BREAK_DOWN:
 			isBreakDown = true;
 			break;
+		case BREAKABLE_BRICK_STATE_CREATE_BUTTON:
+			buttonCreated = true;
+			vy = -BREAKBLE_BRICK_VY;
+			buttonP->SetPosition(x, y - BRICK_BBOX_HEIGHT);
+			buttonP->isCreated = true;
+			break;
 		case BREAKABLE_BRICK_STATE_IS_UP:
 			vy = -BREAKBLE_BRICK_VY;
+			break;
+		case COIN_STATE_TRANSFORMS_BRICK:
+			type = OBJECT_TYPE_BREAKABLE_BRICK;
+			isBlocking = 1;
+			break;
 			break;
 		default:break;
 		}

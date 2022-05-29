@@ -277,12 +277,22 @@ void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
 			if (level == MARIO_LEVEL_SMALL)
 			{
 				if (breakableBrick->GetY() == breakableBrick->startY)
-					e->obj->SetState(BREAKABLE_BRICK_STATE_IS_UP);
+					if (!breakableBrick->buttonCreated)
+						e->obj->SetState(BREAKABLE_BRICK_STATE_IS_UP);
 			}
 			else {
+				if (breakableBrick->haveButton && !breakableBrick->buttonCreated)
+				{
+					breakableBrick->SetState(BREAKABLE_BRICK_STATE_CREATE_BUTTON);
+				}
+				else if (!breakableBrick->haveButton) {
 					e->obj->SetState(BREAKABLE_BRICK_STATE_BREAK_DOWN);
+				}
 			}
 		}
+	}
+	else {
+		OnCollisionWithCoin(e);
 	}
 }
 

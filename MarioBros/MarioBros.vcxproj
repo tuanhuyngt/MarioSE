@@ -145,6 +145,7 @@
     <ClCompile Include="BreakableBrick.cpp" />
     <ClCompile Include="BreakableBrickEffect.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="ButtonP.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="BreakableBrick.h" />
     <ClInclude Include="BreakableBrickEffect.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="ButtonP.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
