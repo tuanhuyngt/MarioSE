@@ -1,5 +1,8 @@
 #include "Koopas.h"
+
+#include "BreakableBrick.h"
 #include "debug.h"
+#include "FirePiranhaPlant.h"
 #include "QuestionBrick.h"
 #include "Goomba.h"
 
@@ -21,20 +24,19 @@ void Koopas::GetBoundingBox(float& left, float& top, float& right, float& bottom
 			right = left + KOOPAS_BBOX_WIDTH;
 		}
 	}
-
 }
 
 void Koopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
+	HandleKoopasDropOut();
 	HandleKoopasReborn();
 	if (!isHold)
 	{
 		vy += ay * dt;
 		if (state == KOOPAS_STATE_WALKING && level == SMART_KOOPAS)
 		{
-			if (vx > 0)NavBox->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
-			else NavBox->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
+			if (vx > 0)NavBox->SetPosition(x + KOOPAS_BBOX_WIDTH / 2 + NAVIGATION_BBOX_WIDTH / 2, y);
+			else NavBox->SetPosition(x - KOOPAS_BBOX_WIDTH / 2 - NAVIGATION_BBOX_WIDTH / 2, y);
 			NavBox->Update(dt, coObjects);
 			float navX, navY;
 			NavBox->GetPosition(navX, navY);
@@ -42,6 +44,24 @@ void Koopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		}
 		CCollision::GetInstance()->Process(this, dt, coObjects);
+		for (int i = 0; i < coObjects->size(); i++)
+		{
+			if (CCollision::GetInstance()->CheckAABB(this, coObjects->at(i)))
+			{
+				if (dynamic_cast<CGoomba*>(coObjects->at(i)))
+				{
+					CGoomba* goomba = dynamic_cast<CGoomba*>(coObjects->at(i));
+					if (state == KOOPAS_STATE_INSHELL_ATTACK)
+					{
+						if (goomba->GetState() != GOOMBA_STATE_DIEBYSHELL)
+						{
+							goomba->SetNX(nx);
+							goomba->SetState(GOOMBA_STATE_DIEBYSHELL);
+						}
+					}
+				}
+			}
+		}
 	}
 	else if (state == KOOPAS_STATE_ATTACKED_BY_TAIL) {
 		SetState(KOOPAS_STATE_INSHELL);
@@ -54,9 +74,10 @@ void Koopas::Render()
 	if (level == NORMAL_KOOPAS)GetKoopasAni(aniId);
 	else if (level == SMART_KOOPAS)GetRedKoopasAni(aniId);
 	else if (level == PARA_KOOPAS)GetParaKoopasAni(aniId);
-	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if (CAnimations::GetInstance()->Get(aniId))
+		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
-	NavBox->Render();
+	//NavBox->Render();
 }
 
 void Koopas::OnNoCollision(DWORD dt)
@@ -96,6 +117,10 @@ void Koopas::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<Koopas*>(e->obj))
 		OnCollisionWithKoopas(e);
+	else if (dynamic_cast<BreakableBrick*>(e->obj))
+		OnCollisionWithBreakableBrick(e);
+	else if (dynamic_cast<FirePiranhaPlant*>(e->obj))
+		e->obj->Delete();
 }
 
 void Koopas::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
@@ -110,14 +135,13 @@ void Koopas::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 
 void Koopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
+	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 	if (state == KOOPAS_STATE_INSHELL_ATTACK)
 	{
-		if (e->nx)
+		if (e->nx && goomba->GetState() != GOOMBA_STATE_DIEBYSHELL)
 		{
-			CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-			goomba->SetNx(nx);
-			if (goomba->GetState() != GOOMBA_STATE_DIEBYSHELL)
-				goomba->SetState(GOOMBA_STATE_DIEBYSHELL);
+			goomba->SetNX(nx);
+			goomba->SetState(GOOMBA_STATE_DIEBYSHELL);
 		}
 	}
 }
@@ -125,9 +149,20 @@ void Koopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 void Koopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
 	Koopas* koopas = dynamic_cast<Koopas*>(e->obj);
-	if (koopas->state == KOOPAS_STATE_INSHELL_ATTACK) {
+	if (state == KOOPAS_STATE_INSHELL_ATTACK) {
 		if (e->nx || e->ny)
-			SetState(KOOPAS_STATE_DIE_BY_SHELL);
+		{
+			koopas->SetState(KOOPAS_STATE_DIE_BY_SHELL);
+		}
+	}
+}
+
+void Koopas::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
+{
+	BreakableBrick* breakBrick = dynamic_cast<BreakableBrick*>(e->obj);
+	if (e->nx != 0 && state == KOOPAS_STATE_INSHELL_ATTACK && !breakBrick->haveButton && breakBrick->GetType() != OBJECT_TYPE_COIN)
+	{
+		breakBrick->SetState(BREAKABLE_BRICK_STATE_BREAK_DOWN);
 	}
 }
 
@@ -139,7 +174,8 @@ void Koopas::GetKoopasAni(int& IdAni)
 		else IdAni = ID_ANI_KOOPAS_WALKING_LEFT;
 	}
 	else if (state == KOOPAS_STATE_REBORN) IdAni = ID_ANI_KOOPAS_REBORN;
-	else if (IsAttackedByTail)IdAni = ID_ANI_KOOPAS_ATTACKED_BY_TAIL;
+	else if (IsAttackedByTail) { if (state == KOOPAS_STATE_INSHELL_ATTACK) IdAni = ID_ANI_KOOPAS_ATTACKED_BY_TAIL_INSHELL_ATTACK; 
+	else IdAni = ID_ANI_KOOPAS_ATTACKED_BY_TAIL; }
 	else if (state == KOOPAS_STATE_INSHELL || state == KOOPAS_STATE_DIE_BY_SHELL)IdAni = ID_ANI_KOOPAS_INSHELL;
 	else if (state == KOOPAS_STATE_INSHELL_ATTACK)IdAni = ID_ANI_KOOPAS_INSHELL_ATTACK;
 }
@@ -152,7 +188,8 @@ void Koopas::GetRedKoopasAni(int& IdAni)
 		else IdAni = ID_ANI_REDKOOPAS_WALKING_LEFT;
 	}
 	else if (state == KOOPAS_STATE_REBORN) IdAni = ID_ANI_REDKOOPAS_REBORN;
-	else if (IsAttackedByTail)IdAni = ID_ANI_REDKOOPAS_ATTACKED_BY_TAIL;
+	else if (IsAttackedByTail) { if(state == KOOPAS_STATE_INSHELL_ATTACK) IdAni = ID_ANI_REDKOOPAS_ATTACKED_BY_TAIL_INSHELL_ATTACK;
+	else IdAni = ID_ANI_REDKOOPAS_ATTACKED_BY_TAIL; }
 	else if (state == KOOPAS_STATE_INSHELL || state == KOOPAS_STATE_DIE_BY_SHELL)IdAni = ID_ANI_REDKOOPAS_INSHELL;
 	else if (state == KOOPAS_STATE_INSHELL_ATTACK)IdAni = ID_ANI_REDKOOPAS_INSHELL_ATTACK;
 }
@@ -192,7 +229,7 @@ void Koopas::SetState(int state)
 		WaitingRebornTime = GetTickCount64();
 		break;
 	case KOOPAS_STATE_INSHELL_ATTACK:
-		vx = nx * KOOPAS_WALKING_SPEED * 4;
+		vx = nx * KOOPAS_WALKING_SPEED * 5;
 		InShell = true;
 		IsAttack = true;
 		break;
@@ -201,6 +238,8 @@ void Koopas::SetState(int state)
 		vy = -GOOMBA_DIEBYSHELL_VY;
 		InShell = true;
 		IsAttack = false;
+		if (level == PARA_KOOPAS)
+			level = NORMAL_KOOPAS;
 		break;
 	case KOOPAS_STATE_ATTACKED_BY_TAIL:
 		vx = nx * GOOMBA_DIEBYSHELL_VX;

@@ -21,12 +21,14 @@
 #define ID_ANI_KOOPAS_ATTACKED_BY_TAIL	30011
 #define ID_ANI_KOOPAS_HAVE_WING_LEFT	30012
 #define ID_ANI_KOOPAS_HAVE_WING_RIGHT	30013
+#define ID_ANI_KOOPAS_ATTACKED_BY_TAIL_INSHELL_ATTACK	31001
 #define ID_ANI_REDKOOPAS_WALKING_RIGHT	30004
 #define ID_ANI_REDKOOPAS_WALKING_LEFT	30005
 #define ID_ANI_REDKOOPAS_INSHELL	30006
 #define ID_ANI_REDKOOPAS_INSHELL_ATTACK	30007
 #define ID_ANI_REDKOOPAS_REBORN	30008
 #define ID_ANI_REDKOOPAS_ATTACKED_BY_TAIL	30010
+#define ID_ANI_REDKOOPAS_ATTACKED_BY_TAIL_INSHELL_ATTACK	31000
 
 #define NORMAL_KOOPAS	1
 #define SMART_KOOPAS	2
@@ -36,10 +38,14 @@
 #define KOOPAS_BBOX_HEIGHT 28
 #define KOOPAS_BBOX_HIDDEN 14
 
-#define KOOPAS_JUMP_SPEED 0.28
+#define KOOPAS_JUMP_SPEED 0.25
+
+#define KOOPAS_DROP_OUT_Y	450
+#define KOOPAS_DROP_OUT_COMPLETE	1000
 
 #define KOOPAS_WAITING_REBORN_TIME	5000
 
+#define KOOPAS_REBORN_TIME	3000
 class Koopas : public CGameObject
 {
 protected:
@@ -49,9 +55,9 @@ protected:
 	bool InShell;
 	bool isHold;
 	bool IsAttackedByTail;
-	DWORD phaseTime;
+	ULONGLONG phaseTime;
 
-	DWORD ReborningTime, WaitingRebornTime;
+	ULONGLONG ReborningTime, WaitingRebornTime;
 	ULONGLONG die_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -66,6 +72,7 @@ protected:
 	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
+	void OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e);
 
 	void GetKoopasAni(int& IdAni);
 	void GetRedKoopasAni(int& IdAni);
@@ -78,7 +85,7 @@ protected:
 		}
 		else if (state == KOOPAS_STATE_REBORN)
 		{
-			if (GetTickCount64() - ReborningTime >= 3000)
+			if (GetTickCount64() - ReborningTime >= KOOPAS_REBORN_TIME)
 			{
 				SetState(KOOPAS_STATE_WALKING);
 			}
@@ -91,6 +98,11 @@ public:
 	bool IsAttack;
 	Koopas(float x, float y, int Level);
 	virtual void SetState(int state);
+
+	void HandleKoopasDropOut() {
+		if (y > KOOPAS_DROP_OUT_Y)
+			y = KOOPAS_DROP_OUT_COMPLETE;
+	}
 
 	void SetHolding(bool value)
 	{
