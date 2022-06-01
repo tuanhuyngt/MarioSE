@@ -123,6 +123,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt)
 		OnCollisionWithItem(e);
 	else if (dynamic_cast<BreakableBrick*>(e->obj))
 		OnCollisionWithBreakableBrick(e);
+	else if (dynamic_cast<ButtonP*>(e->obj))
+		OnCollisionWithButtonP(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -300,6 +302,15 @@ void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithButtonP(LPCOLLISIONEVENT e)
+{
+	ButtonP* button = dynamic_cast<ButtonP*>(e->obj);
+	if (e->ny < 0 && !button->isPushed)
+	{
+		button->SetState(BUTTON_P_STATE_PUSHED);
+		CGame::GetInstance()->buttonIsPushed = true;
+	}
+}
 //
 // Get animation ID for small Mario
 //

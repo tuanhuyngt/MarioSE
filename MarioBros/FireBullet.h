@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Mario.h"
 
 #define FIREBULLET_BBOX_WIDTH	8
 #define FIREBULLET_BBOX_HEIGHT	8
@@ -11,22 +12,19 @@ class FireBullet :
 {
 public:
 
-	ULONGLONG die_start;
+	void GetBoundingBox(float& left, float& top, float& right, float& bottom) override;
+	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) override;
+	void Render() override;
 
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void Render();
+	int IsCollidable() override { return 1; };
+	int IsBlocking() override { return 0; }
+	void OnNoCollision(DWORD dt) override;
 
-	virtual int IsCollidable() { return 1; };
-	virtual int IsBlocking() { return 0; }
-	virtual void OnNoCollision(DWORD dt);
-
-	virtual void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);
-public:
+	void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt) override;
 	bool isActivate;
 	FireBullet(float x, float y) :CGameObject(x, y) {
 		isActivate = false;
-	};
-	void SetState(int state);
+	}
+	void SetState(int state) override;
 };
 

@@ -1,5 +1,4 @@
 #include "FireBullet.h"
-#include "Mario.h"
 
 void FireBullet::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {

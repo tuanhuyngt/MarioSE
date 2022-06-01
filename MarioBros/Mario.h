@@ -331,6 +331,7 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
+	void OnCollisionWithButtonP(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
