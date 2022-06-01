@@ -35,7 +35,7 @@ public:
 	bool MarioIsFlying;
 	int speedStack;
 	HUD() {
-		speedStack = 3;
+		speedStack = 0;
 		MarioIsFlying = false;
 	};
 	~HUD();

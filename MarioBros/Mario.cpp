@@ -14,6 +14,7 @@
 #include "Collision.h"
 #include "Koopas.h"
 #include "FirePiranhaPlant.h"
+#include "HUD.h"
 #include "PiranhaPlant.h"
 #include "Leaf.h"
 
@@ -55,6 +56,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	isOnPlatform = false;
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	HandleRacoonAttack(dt, coObjects);
+
+	HUD::GetInstance()->speedStack = speedStack;
+	HUD::GetInstance()->MarioIsFlying = isFlying;
 
 	HandleMarioHoldingKoopas();
 	for (int i = 0; i < coObjects->size(); i++)

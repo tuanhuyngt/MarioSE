@@ -128,7 +128,6 @@ public:
 			type = OBJECT_TYPE_BREAKABLE_BRICK;
 			isBlocking = 1;
 			break;
-			break;
 		default:break;
 		}
 		CGameObject::SetState(state);
