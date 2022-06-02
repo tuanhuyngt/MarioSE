@@ -5,13 +5,18 @@
 #include "Goomba.h"
 #include "QuestionBrick.h"
 #include "Koopas.h"
+#include "FirePiranhaPlant.h"
+#include "PiranhaPlant.h"
 
 void MarioTail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x - TAIL_BBOX_WIDTH / 2;
-	top = y - TAIL_BBOX_HEIGHT / 2;
-	right = x + TAIL_BBOX_WIDTH;
-	bottom = y + TAIL_BBOX_HEIGHT;
+	if (IsAttack)
+	{
+		left = x - TAIL_BBOX_WIDTH / 2;
+		top = y - TAIL_BBOX_HEIGHT / 2;
+		right = x + TAIL_BBOX_WIDTH;
+		bottom = y + TAIL_BBOX_HEIGHT;
+	}
 }
 
 void MarioTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -28,6 +33,17 @@ void MarioTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				OnCollisionWithKoopas(coObjects->at(i));
 			else if (coObjects->at(i)->GetType() == OBJECT_TYPE_BREAKABLE_BRICK)
 				OnCollisionWithBreakableBrick(coObjects->at(i));
+			else if (dynamic_cast<FirePiranhaPlant*>(coObjects->at(i)))
+			{
+				FirePiranhaPlant* fireplant = dynamic_cast<FirePiranhaPlant*>(coObjects->at(i));
+				fireplant->Delete();
+			}
+			else if (dynamic_cast<PiranhaPlant*>(coObjects->at(i)))
+			{
+				PiranhaPlant* plant = dynamic_cast<PiranhaPlant*>(coObjects->at(i));
+				if (!plant->isInPipe)
+					plant->Delete();
+			}
 		}
 	}
 }
@@ -35,7 +51,12 @@ void MarioTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void MarioTail::OnCollisionWithGoomba(LPGAMEOBJECT& obj)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(obj);
-	goomba->SetState(GOOMBA_STATE_DIEBYSHELL);
+	if (goomba->GetState() != GOOMBA_STATE_DIEBYSHELL)
+	{
+		goomba->SetNX(nx);
+		goomba->SetState(GOOMBA_STATE_DIEBYSHELL);
+	}
+	IsAttack = false;
 }
 
 void MarioTail::OnCollisionWithQuestionBrick(LPGAMEOBJECT& obj)
@@ -44,6 +65,7 @@ void MarioTail::OnCollisionWithQuestionBrick(LPGAMEOBJECT& obj)
 	if (!qbrick->innitItemSuccess) {
 		qbrick->SetState(QUESTION_BRICK_STATE_START_INNIT);
 	}
+	IsAttack = false;
 }
 
 void MarioTail::OnCollisionWithKoopas(LPGAMEOBJECT& obj)
@@ -52,6 +74,7 @@ void MarioTail::OnCollisionWithKoopas(LPGAMEOBJECT& obj)
 	koopas->SetNX(nx);
 	if (koopas->level == PARA_KOOPAS) koopas->level = NORMAL_KOOPAS;
 	koopas->SetState(KOOPAS_STATE_ATTACKED_BY_TAIL);
+	IsAttack = false;
 }
 
 void MarioTail::OnCollisionWithBreakableBrick(LPGAMEOBJECT& obj)
