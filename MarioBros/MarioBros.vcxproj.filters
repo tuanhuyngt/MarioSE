@@ -138,6 +138,9 @@
     <ClCompile Include="ButtonP.cpp">
       <Filter>Items</Filter>
     </ClCompile>
+    <ClCompile Include="LastItemObject.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -261,6 +264,9 @@
       <Filter>Items</Filter>
     </ClInclude>
     <ClInclude Include="ButtonP.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="LastItemObject.h">
       <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>

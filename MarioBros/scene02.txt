@@ -157,6 +157,7 @@ pipe.txt
 
 #Portal 
 50	200	160	216	180	1
-
+#LAST_ITEM
+24	2696	344
 [MAP]
 9000	Maps/SMB3_1-1_map_data.txt	44	176	10	11	16	16	0

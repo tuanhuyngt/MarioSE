@@ -61,6 +61,7 @@ class CGame
 
 public:
 	bool buttonIsPushed = false;
+	bool resetLastItem = false;
 	// Init DirectX, Sprite Handler
 	void Init(HWND hWnd, HINSTANCE hInstance);
 

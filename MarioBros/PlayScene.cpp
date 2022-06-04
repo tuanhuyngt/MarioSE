@@ -21,6 +21,7 @@
 #include "FirePiranhaPlant.h"
 #include "PiranhaPlant.h"
 #include "HUD.h"
+#include "LastItemObject.h"
 
 using namespace std;
 
@@ -232,8 +233,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int scene_id = atoi(tokens[5].c_str());
 		obj = new CPortal(x, y, r, b, scene_id);
 	}
-	break;
-
+	case OBJECT_TYPE_LAST_ITEM:
+	{
+		obj = new LastItemObject(x, y);
+		break;
+	}
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);

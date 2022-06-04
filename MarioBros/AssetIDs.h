@@ -25,6 +25,7 @@
 #define OBJECT_TYPE_BREAKBLEBRICK	8
 
 #define OBJECT_TYPE_PORTAL	50
+#define OBJECT_TYPE_LAST_ITEM	24
 
 
 #pragma region MARIO 
