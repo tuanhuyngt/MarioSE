@@ -17,11 +17,17 @@
 #include "HUD.h"
 #include "PiranhaPlant.h"
 #include "Leaf.h"
+#include "Pipe.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
+
+	if(canGotoHiddenMap)
+	{
+		DebugOut(L">>> Mario Hidden MAP >>> \n");
+	}
 
 	HandleMarioStateIdle();
 
@@ -111,6 +117,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
+	else if (dynamic_cast<Pipe*>(e->obj))
+		OnCollisionWithSpecialPipe(e);
 	else if (dynamic_cast<QuestionBrick*>(e->obj))
 		OnCollisionWithQuestionBrick(e);
 	else if (dynamic_cast<Koopas*>(e->obj))
@@ -311,6 +319,23 @@ void CMario::OnCollisionWithButtonP(LPCOLLISIONEVENT e)
 		CGame::GetInstance()->buttonIsPushed = true;
 	}
 }
+
+void CMario::OnCollisionWithSpecialPipe(LPCOLLISIONEVENT e)
+{
+	Pipe* pipe = dynamic_cast<Pipe*>(e->obj);
+	if (pipe->PipeType == SPECIAL_PIPE && e->ny < 0)
+	{
+		StartY = y + MARIO_BIG_BBOX_HEIGHT;
+		pipeX = pipe->GetX();
+		canGotoHiddenMap = true;
+	}
+	else if (pipe->PipeType == SPECIAL_PIPE_HIDDEN_MAP_PIPE && e->ny > 0) {
+		StartY = pipe->GetY();
+		canGotoHiddenMap = true;
+		pipeX = pipe->GetX();
+	}
+}
+
 //
 // Get animation ID for small Mario
 //
@@ -833,6 +858,8 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_SIT:
+		if (this->state == MARIO_STATE_WALKING_LEFT || this->state == MARIO_STATE_WALKING_RIGHT)
+			break;
 		if (isOnPlatform && level != MARIO_LEVEL_SMALL)
 		{
 			state = MARIO_STATE_IDLE;
@@ -884,7 +911,7 @@ void CMario::SetState(int state)
 		SlowFallingTime = GetTickCount64();
 		break;
 	case MARIO_STATE_FLYING:
-		vy = -0.15f;
+		vy = -MARIO_FLYING_SPEED;
 		ay = 0;
 		IsFalling = true;
 		FallingTime = GetTickCount64();
@@ -1139,6 +1166,7 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		}
 	}
 }
+
 
 void CMario::SetLevel(int l)
 {

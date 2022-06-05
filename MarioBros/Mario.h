@@ -23,6 +23,7 @@
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.3f
 #define MARIO_SLOW_FALLING_SPEED  0.02f
+#define MARIO_FLYING_SPEED  0.15f
 #define MARIO_MAX_SPEED_STACK	7
 
 #define MARIO_SPEEDSTACK_TIME 140
@@ -222,6 +223,10 @@ class CMario : public CGameObject
 	bool IsKickKoopas;
 	DWORD KickKoopasTime;
 
+	bool canGotoHiddenMap = false;
+	float StartY;
+	float pipeX;
+
 public:
 	CMario(float x, float y) : CGameObject(x, y)
 	{
@@ -300,6 +305,7 @@ public:
 	{
 		return speedStack;
 	}
+
 	void Reset()
 	{
 		y = 240;
@@ -332,10 +338,12 @@ public:
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 	void OnCollisionWithButtonP(LPCOLLISIONEVENT e);
+	void OnCollisionWithSpecialPipe(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
 	int GetAniIdRacoon();
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
 };
