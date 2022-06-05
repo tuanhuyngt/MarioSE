@@ -23,4 +23,5 @@ height	240
 30	textures\pipe.png
 40	textures\misc1.png
 50	textures\HUD.png
+52	textures\HiddenMapPipe.png
 9000	Maps\SMB3_1-1_map_bank.png
