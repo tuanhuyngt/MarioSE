@@ -161,4 +161,4 @@ pipe.txt
 #LAST_ITEM
 24	2696	344
 [MAP]
-9000	Maps/SMB3_1-1_map_data.txt	44	176	10	11	16	16	0
+9000	Maps/SMB3_1-1_map_data.txt	43	176	12	11	16	16	0
