@@ -70,7 +70,7 @@ void Camera::Update(DWORD dt)
 		}
 	}
 	else {
-		Camera::GetInstance()->SetCamPos(cx, 240);
+		Camera::GetInstance()->SetCamPos(cx, 468);
 	}
 	cam_y += cam_vy * dt;
 }

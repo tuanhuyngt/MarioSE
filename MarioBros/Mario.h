@@ -321,6 +321,11 @@ public:
 		return isHoldingKoopas;
 	}
 
+	bool CanGotoHiddenMap()
+	{
+		return canGotoHiddenMap;
+	}
+
 	void HandleMarioIsFlying(DWORD dt);
 	void HandleMarioIsAttacked();
 	void HandleMarioRunning();

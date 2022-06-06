@@ -21,59 +21,65 @@
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vy += ay * dt;
-	vx += ax * dt;
-
-	if(canGotoHiddenMap)
+	if (!goInHidden)
 	{
-		DebugOut(L">>> Mario Hidden MAP >>> \n");
-	}
+		vy += ay * dt;
+		vx += ax * dt;
 
-	HandleMarioStateIdle();
+		HandleMarioStateIdle();
 
-	HandleMarioFalling();
+		HandleMarioFalling();
 
-	HandleMarioTransformRacoon();
+		HandleMarioTransformRacoon();
 
-	HandleMarioIsFlying(dt);
+		HandleMarioIsFlying(dt);
 
-	HandleMarioRunning();
+		HandleMarioRunning();
 
-	HandleMarioUntouchable();
+		HandleMarioUntouchable();
 
-	HandleMarioKickKoopas();
+		HandleMarioKickKoopas();
 
-	isOnPlatform = false;
-	CCollision::GetInstance()->Process(this, dt, coObjects);
-	HandleRacoonAttack(dt, coObjects);
+		isOnPlatform = false;
+		CCollision::GetInstance()->Process(this, dt, coObjects);
+		HandleRacoonAttack(dt, coObjects);
 
-	HUD::GetInstance()->speedStack = speedStack;
-	HUD::GetInstance()->MarioIsFlying = isFlying;
-	Camera::GetInstance()->GetMarioInfo(vx, vy, x, y, isOnPlatform, isFlying, IsInHiddenMap);
+		HUD::GetInstance()->speedStack = speedStack;
+		HUD::GetInstance()->MarioIsFlying = isFlying;
+		Camera::GetInstance()->GetMarioInfo(vx, vy, x, y, isOnPlatform, isFlying, IsInHiddenMap);
 
-	HandleMarioHoldingKoopas();
-	for (int i = 0; i < coObjects->size(); i++)
-	{
-		if (CCollision::GetInstance()->CheckAABB(this, coObjects->at(i)))
+		HandleMarioHoldingKoopas();
+		for (int i = 0; i < coObjects->size(); i++)
 		{
-			if (coObjects->at(i)->CheckIsItem())
+			if (CCollision::GetInstance()->CheckAABB(this, coObjects->at(i)))
 			{
-				if (dynamic_cast<Mushroom*>(coObjects->at(i)))
+				if (coObjects->at(i)->CheckIsItem())
 				{
-					level = MARIO_LEVEL_BIG;
-					if (level == MARIO_LEVEL_SMALL)
-						y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
-					coObjects->at(i)->Delete();
-				}
-				else if (dynamic_cast<Leaf*>(coObjects->at(i)))
-				{
-					if (level == MARIO_LEVEL_SMALL)
-						y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
-					SetState(MARIO_STATE_TRANSFORM_RACOON);
-					coObjects->at(i)->Delete();
+					if (dynamic_cast<Mushroom*>(coObjects->at(i)))
+					{
+						level = MARIO_LEVEL_BIG;
+						if (level == MARIO_LEVEL_SMALL)
+							y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+						coObjects->at(i)->Delete();
+					}
+					else if (dynamic_cast<Leaf*>(coObjects->at(i)))
+					{
+						if (level == MARIO_LEVEL_SMALL)
+							y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+						SetState(MARIO_STATE_TRANSFORM_RACOON);
+						coObjects->at(i)->Delete();
+					}
 				}
 			}
 		}
+	}
+	else
+	{
+		if (canGotoHiddenMap)
+		{
+			DebugOut(L">>> Able to go in Hidden MAP >>> \n");
+		}
+		HandleMarioGoInHiddenMap(dt);
 	}
 }
 
