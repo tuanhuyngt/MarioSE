@@ -60,6 +60,7 @@ class CGame
 	void _ParseSection_SCENES(string line);
 
 public:
+	float pipeX;
 	bool buttonIsPushed = false;
 	bool resetLastItem = false;
 	// Init DirectX, Sprite Handler

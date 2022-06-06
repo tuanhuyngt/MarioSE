@@ -28,7 +28,9 @@ void FirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CalcAtatckEnemy();
 	}
 	if (state == FIRE_PIRANHAPLANT_STATE_UP) {
-		if (GetTickCount64() - CalcAtkTime >= 3000) {
+		if (x == CGame::GetInstance()->pipeX && isInPipe)
+			vy = 0;
+		else if (GetTickCount64() - CalcAtkTime >= 3000) {
 			SetState(FIRE_PIRANHAPLANT_STATE_DOWN);
 		}
 	}

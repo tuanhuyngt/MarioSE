@@ -24,6 +24,10 @@
 #define ID_ANI_FIREPLANT_ATTACK_LEFT_UP			210006
 #define ID_ANI_FIREPLANT_ATTACK_RIGHT_UP		210007
 
+#define VX_BULLET	0.05f
+#define VY_BULLET_MARIO_CLOSE	0.03f
+#define VY_BULLET_MARIO_FAR	0.05f
+
 class FirePiranhaPlant :
 	public CGameObject
 {
@@ -32,6 +36,7 @@ public:
 	float ay;
 	int aniId;
 
+	bool isInPipe;
 	float minY, maxY;
 
 	bool isAttack;
@@ -59,30 +64,31 @@ public:
 		if (abs(x - enemyX) <= MIN_ATTACK_ZONE)
 		{
 			if (enemyY < y)
-				VyBullet = -0.05;
+				VyBullet = -VY_BULLET_MARIO_FAR;
 			else
-				VyBullet = 0.05;
+				VyBullet = VY_BULLET_MARIO_FAR;
 		}
 		else
 		{
 			if (enemyY < y)
-				VyBullet = -0.03;
+				VyBullet = -VY_BULLET_MARIO_CLOSE;
 			else
-				VyBullet = 0.03;
+				VyBullet = VY_BULLET_MARIO_CLOSE;
 		}
 		if (enemyX > x)
 		{
-			VxBullet = 0.05;
+			VxBullet = VX_BULLET;
 			nx = 1;
-			BulletX = x + FIRE_PIRANHAPLANT_BBOX_WIDTH / 2;
+			float bulletX = x + FIRE_PIRANHAPLANT_BBOX_WIDTH / 2;
+			BulletX = bulletX;
 		}
 		else
 		{
-			VxBullet = -0.05;
+			VxBullet = -VX_BULLET;
 			nx = -1;
-			BulletX = x - FIRE_PIRANHAPLANT_BBOX_WIDTH / 2;
+			BulletX = x - (float)FIRE_PIRANHAPLANT_BBOX_WIDTH / 2;
 		}
-		BulletY = minY - 8;
+		BulletY = (float)minY - 8;
 		if (!fireBullet->isActivate)
 		{
 			fireBullet->isActivate = true;
@@ -104,6 +110,7 @@ public:
 		SetState(FIRE_PIRANHAPLANT_STATE_UP);
 		fireBullet = new FireBullet(x, y);
 		enemyX = enemyY = 0;
+		isInPipe = true;
 	};
 	virtual void SetState(int state);
 };

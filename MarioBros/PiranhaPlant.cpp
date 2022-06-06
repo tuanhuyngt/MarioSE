@@ -43,7 +43,9 @@ void PiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	if (state == PIRANHAPLANT_STATE_UP) {
-		if (GetTickCount64() - CalcAtkTime >= 2000) {
+		if (x == CGame::GetInstance()->pipeX && isInPipe)
+			vy = 0;
+		else if (GetTickCount64() - CalcAtkTime >= 2000) {
 			SetState(PIRANHAPLANT_STATE_DOWN);
 		}
 	}
