@@ -37,22 +37,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	HandleMarioIsFlying(dt);
 
-	if (Camera::GetInstance()->cam_y < 240 && !isFlying)
-	{
-		if (y - CGame::GetInstance()->GetBackBufferHeight() / 2 < 0)
-			Camera::GetInstance()->cam_y = 0;
-		else if (!isOnPlatform)
-		{
-			Camera::GetInstance()->cam_vy = vy;
-			Camera::GetInstance()->Update(dt);
-		}
-	}
-	else {
-		if (!isFlying)
-		{
-			Camera::GetInstance()->IsFollowingMario = false;
-		}
-	}
 	HandleMarioRunning();
 
 	HandleMarioUntouchable();
@@ -65,6 +49,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	HUD::GetInstance()->speedStack = speedStack;
 	HUD::GetInstance()->MarioIsFlying = isFlying;
+	Camera::GetInstance()->GetMarioInfo(vx, vy, x, y, isOnPlatform, isFlying, IsInHiddenMap);
 
 	HandleMarioHoldingKoopas();
 	for (int i = 0; i < coObjects->size(); i++)
@@ -940,6 +925,11 @@ void CMario::SetState(int state)
 		koopasHold->SetPosition(koopasHold->GetX() + KOOPAS_BBOX_WIDTH / 8, koopasY);
 		koopasHold->SetState(KOOPAS_STATE_INSHELL_ATTACK);
 		break;
+
+	case MARIO_STATE_GO_IN_HIDDEN_MAP:
+		goInHidden = true;
+		SetPosition(pipeX, y);
+		break;
 	}
 
 	CGameObject::SetState(state);
@@ -949,18 +939,7 @@ void CMario::HandleMarioIsFlying(DWORD dt)
 {
 	if (isFlying)
 	{
-		Camera::GetInstance()->IsFollowingMario = true;
-		if (y - CGame::GetInstance()->GetBackBufferHeight() / 2 < 240)
-		{
-			if (y - CGame::GetInstance()->GetBackBufferHeight() / 2 < 0)
-				Camera::GetInstance()->cam_y = 0;
-			else if (!isOnPlatform)
-			{
-				Camera::GetInstance()->cam_vy = vy;
-				Camera::GetInstance()->Update(dt);
-			}
-		}
-		else { Camera::GetInstance()->cam_y = 240; }
+		
 		if (GetTickCount64() - FlyingTime >= 3000)
 		{
 			isFlying = false;
@@ -1165,6 +1144,27 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 			bottom = top + MARIO_BIG_BBOX_HEIGHT;
 		}
 	}
+}
+
+void CMario::HandleMarioGoInHiddenMap(DWORD dt)
+{
+	if (goInHidden)
+	{
+		vy = MARIO_GO_HIDDEN_MAP_SPEED;
+		vx = 0;
+		if (y - StartY >= MARIO_BIG_BBOX_HEIGHT / 2)
+		{
+			SetPosition(HIDDEN_MAP_START_POS_X, HIDDEN_MAP_START_POS_Y);
+			StartY = 1000;
+			IsInHiddenMap = true;
+			Camera::GetInstance()->GetMarioInfo(vx, vy, x, y, isOnPlatform, isFlying, IsInHiddenMap);
+		}
+		if (y - HIDDEN_MAP_START_POS_Y >= MARIO_BIG_BBOX_HEIGHT)
+		{
+			goInHidden = false;
+		}
+	}
+	y += vy * dt;
 }
 
 

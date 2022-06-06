@@ -8,6 +8,10 @@
 #include "debug.h"
 #include "Koopas.h"
 
+#define MARIO_GO_HIDDEN_MAP_SPEED 0.05f
+
+#define HIDDEN_MAP_START_POS_X	2116
+#define HIDDEN_MAP_START_POS_Y	480
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
 
@@ -56,6 +60,7 @@
 #define MARIO_STATE_TRANSFORM_RACOON	901
 #define RACOON_STATE_TRANSFORM_MARIO		902
 #define MARIO_STATE_RELEASE_KOOPAS	1000
+#define MARIO_STATE_GO_IN_HIDDEN_MAP 1100
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -223,7 +228,7 @@ class CMario : public CGameObject
 	bool IsKickKoopas;
 	DWORD KickKoopasTime;
 
-	bool canGotoHiddenMap = false;
+	bool canGotoHiddenMap = false, goInHidden = false, IsInHiddenMap = false;
 	float StartY;
 	float pipeX;
 
@@ -326,6 +331,7 @@ public:
 	void HandleRacoonAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void HandleMarioTransformRacoon();
 	void HandleMarioUntouchable();
+	void HandleMarioGoInHiddenMap(DWORD dt);
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
