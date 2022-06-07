@@ -12,6 +12,9 @@
 
 #define HIDDEN_MAP_START_POS_X	2116
 #define HIDDEN_MAP_START_POS_Y	480
+
+#define HIDDEN_MAP_OUT_POS_X	2336
+#define HIDDEN_MAP_OUT_POS_Y	400
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
 
@@ -61,6 +64,7 @@
 #define RACOON_STATE_TRANSFORM_MARIO		902
 #define MARIO_STATE_RELEASE_KOOPAS	1000
 #define MARIO_STATE_GO_IN_HIDDEN_MAP 1100
+#define MARIO_STATE_GO_OUT_HIDDEN_MAP 1200
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -228,7 +232,10 @@ class CMario : public CGameObject
 	bool IsKickKoopas;
 	DWORD KickKoopasTime;
 
-	bool canGotoHiddenMap = false, goInHidden = false, IsInHiddenMap = false;
+	bool canGotoHiddenMap = false;
+	bool goInHidden = false;
+	bool goOutHidden = false;
+	bool IsInHiddenMap = false;
 	float StartY;
 	float pipeX;
 
@@ -315,10 +322,16 @@ public:
 	{
 		y = 240;
 		level = MARIO_LEVEL_RACOON;
+		state = MARIO_STATE_IDLE;
 	}
 
 	bool CheckMarioHoldKoopas() {
 		return isHoldingKoopas;
+	}
+
+	void SetStateInHiddenMap(bool value)
+	{
+		this->IsInHiddenMap = value;
 	}
 
 	bool CanGotoHiddenMap()
@@ -350,6 +363,7 @@ public:
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 	void OnCollisionWithButtonP(LPCOLLISIONEVENT e);
 	void OnCollisionWithSpecialPipe(LPCOLLISIONEVENT e);
+	void OnCollisionWithLastItemObject(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();

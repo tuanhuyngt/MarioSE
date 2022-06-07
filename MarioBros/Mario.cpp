@@ -15,14 +15,16 @@
 #include "Koopas.h"
 #include "FirePiranhaPlant.h"
 #include "HUD.h"
+#include "LastItemObject.h"
 #include "PiranhaPlant.h"
 #include "Leaf.h"
 #include "Pipe.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (!goInHidden)
+	if (!goInHidden && !goOutHidden)
 	{
+		canGotoHiddenMap = false;
 		vy += ay * dt;
 		vx += ax * dt;
 
@@ -128,6 +130,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt)
 		OnCollisionWithBreakableBrick(e);
 	else if (dynamic_cast<ButtonP*>(e->obj))
 		OnCollisionWithButtonP(e);
+	else if (dynamic_cast<LastItemObject*>(e->obj))
+		OnCollisionWithLastItemObject(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -331,6 +335,12 @@ void CMario::OnCollisionWithSpecialPipe(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithLastItemObject(LPCOLLISIONEVENT e)
+{
+	LastItemObject* LastItem = dynamic_cast<LastItemObject*>(e->obj);
+	if (!LastItem->IsChosen)
+		LastItem->IsChosen = true;
+}
 //
 // Get animation ID for small Mario
 //
@@ -940,6 +950,10 @@ void CMario::SetState(int state)
 		goInHidden = true;
 		SetPosition(pipeX, y);
 		break;
+	case MARIO_STATE_GO_OUT_HIDDEN_MAP:
+		goOutHidden = true;
+		SetPosition(pipeX, y);
+		break;
 	}
 
 	CGameObject::SetState(state);
@@ -1172,6 +1186,22 @@ void CMario::HandleMarioGoInHiddenMap(DWORD dt)
 		if (y - HIDDEN_MAP_START_POS_Y >= MARIO_BIG_BBOX_HEIGHT)
 		{
 			goInHidden = false;
+		}
+	}
+	else if (goOutHidden)
+	{
+		vy = -(float)MARIO_GO_HIDDEN_MAP_SPEED;
+		vx = 0;
+		if (StartY - y >= MARIO_BIG_BBOX_HEIGHT)
+		{
+			IsInHiddenMap = false;
+			SetPosition(HIDDEN_MAP_OUT_POS_X, HIDDEN_MAP_OUT_POS_Y);
+			StartY = 0;
+			Camera::GetInstance()->GetMarioInfo(vx, vy, x, y, isOnPlatform, isFlying, IsInHiddenMap);
+		}
+		if (HIDDEN_MAP_OUT_POS_Y - y >= 16 * 2)
+		{
+			goOutHidden = false;
 		}
 	}
 	y += vy * dt;
