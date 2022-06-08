@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "Animations.h"
 #include "PlayScene.h"
+#include "TitleScene.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -457,7 +458,16 @@ void CGame::_ParseSection_SCENES(string line)
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);   // file: ASCII format (single-byte char) => Wide Char
 
-	LPSCENE scene = new CPlayScene(id, path);
+	LPSCENE scene;
+	switch (id)
+	{
+	case 0:
+		scene = new CTitleScene(id, path);
+		break;
+	default:
+		scene = new CPlayScene(id, path);
+		break;
+	}
 	scenes[id] = scene;
 }
 
@@ -505,13 +515,13 @@ void CGame::Load(LPCWSTR gameFile)
 
 	DebugOut(L"[INFO] Loading game file : %s has been loaded successfully\n", gameFile);
 
-	SwitchScene();
+	SwitchScene(current_scene);
 }
 
-void CGame::SwitchScene()
+void CGame::SwitchScene(int scene_id)
 {
-	if (next_scene < 0 || next_scene == current_scene) return; 
-
+	//if (next_scene < 0 || next_scene == current_scene) return; 
+	next_scene = scene_id;
 	DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
 
 	scenes[current_scene]->Unload();
