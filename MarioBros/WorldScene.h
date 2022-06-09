@@ -1,11 +1,13 @@
 #pragma once
-#include "Game.h"
-#include "Textures.h"
 #include "Scene.h"
 #include "GameObject.h"
-#include "Brick.h"
-#include "Mario.h"
 #include "Map.h"
+
+#define SCENE_SECTION_TEXTURES 2
+#define SCENE_SECTION_SPRITES 3
+#define SCENE_SECTION_ANIMATIONS 4
+#define SCENE_SECTION_OBJECTS	6
+#define SCENE_SECTION_MAP	8
 
 class CWorldScene : public CScene
 {
@@ -20,12 +22,9 @@ protected:
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 
-	void _ParseSection_ASSETS(string line);
 	void _ParseSection_OBJECTS(string line);
 
 	void _ParseSection_MAP(string line);
-
-	void LoadAssets(LPCWSTR assetFile);
 
 public:
 	CWorldScene(int id, LPCWSTR filePath);
@@ -51,3 +50,5 @@ public:
 	virtual void OnKeyUp(int KeyCode);
 	CWorldSceneKeyHandler(CScene* s) :CSceneKeyHandler(s) {};
 };
+
+typedef CWorldScene* LPWORLDSCENE;

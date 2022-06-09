@@ -1,5 +1,5 @@
 [SETTINGS]
-start	10
+start	0
 width	320
 height	240
 
@@ -27,5 +27,6 @@ height	240
 52	textures\HiddenMapPipe.png
 60	textures\end_item.png
 80	textures\titlescreen.png
+8000	textures\world_sprite.png
 9000	Maps\SMB3_1-1_map_bank.png
 900000	Maps\SMB3_world_map_bank.png

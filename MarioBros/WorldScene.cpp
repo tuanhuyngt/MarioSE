@@ -15,6 +15,8 @@
 #include "SampleKeyEventHandler.h"
 #include "HUD.h"
 #include "LastItemObject.h"
+#include "MiniMario.h"
+#include "Station.h"
 
 using namespace std;
 
@@ -27,14 +29,6 @@ CWorldScene::CWorldScene(int id, LPCWSTR filePath) :
 
 
 #define SCENE_SECTION_UNKNOWN -1
-#define SCENE_SECTION_ASSETS	1
-#define SCENE_SECTION_OBJECTS	2
-
-#define SCENE_SECTION_MAP	3
-
-#define ASSETS_SECTION_UNKNOWN -1
-#define ASSETS_SECTION_SPRITES 1
-#define ASSETS_SECTION_ANIMATIONS 2
 
 #define MAX_SCENE_LINE 1024
 
@@ -61,17 +55,6 @@ void CWorldScene::_ParseSection_SPRITES(string line)
 	}
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
-}
-
-void CWorldScene::_ParseSection_ASSETS(string line)
-{
-	vector<string> tokens = split(line);
-
-	if (tokens.size() < 1) return;
-
-	wstring path = ToWSTR(tokens[0]);
-
-	LoadAssets(path.c_str());
 }
 
 void CWorldScene::_ParseSection_ANIMATIONS(string line)
@@ -143,40 +126,28 @@ void CWorldScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: {
-		int goombaLevel = atoi(tokens[3].c_str());
-		obj = new CGoomba(x, y, goombaLevel);
-		break;
-	}
-	case OBJECT_TYPE_KOOPAS: {
-		int koopasLevel = atoi(tokens[3].c_str());
-		obj = new Koopas(x, y, koopasLevel);
-		break;
-	}
-	case OBJECT_TYPE_PLATFORM:
+	case OBJECT_TYPE_STATION:
 	{
-
-		float cell_width = (float)atof(tokens[3].c_str());
-		float cell_height = (float)atof(tokens[4].c_str());
-		int length = atoi(tokens[5].c_str());
-		int sprite_begin = atoi(tokens[6].c_str());
-		int sprite_middle = atoi(tokens[7].c_str());
-		int sprite_end = atoi(tokens[8].c_str());
-
-		obj = new CPlatform(
-			x, y,
-			cell_width, cell_height, length,
-			sprite_begin, sprite_middle, sprite_end
-		);
-
+		int id = atoi(tokens[4].c_str());
+		bool left = atoi(tokens[5].c_str()) == 1 ? true : false;
+		bool top = atoi(tokens[6].c_str()) == 1 ? true : false;
+		bool right = atoi(tokens[7].c_str()) == 1 ? true : false;
+		bool bottom = atoi(tokens[8].c_str()) == 1 ? true : false;
+		obj = new CStation(id, left, top, right, bottom);
 		break;
 	}
-	case OBJECT_TYPE_LAST_ITEM:
+	case OBJECT_TYPE_MINI_MARIO:
 	{
-		obj = new LastItemObject(x, y);
+		if (player != NULL)
+		{
+			return;
+		}
+		obj = new CMiniMario(x, y);
+		player = (CMiniMario*)obj;
+
+		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	}
-
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
 		return;
@@ -187,41 +158,6 @@ void CWorldScene::_ParseSection_OBJECTS(string line)
 
 
 	objects.push_back(obj);
-}
-
-void CWorldScene::LoadAssets(LPCWSTR assetFile)
-{
-	DebugOut(L"[INFO] Start loading assets from : %s \n", assetFile);
-
-	ifstream f;
-	f.open(assetFile);
-
-	int section = ASSETS_SECTION_UNKNOWN;
-
-	char str[MAX_SCENE_LINE];
-	while (f.getline(str, MAX_SCENE_LINE))
-	{
-		string line(str);
-
-		if (line[0] == '#') continue;	// skip comment lines	
-
-		if (line == "[SPRITES]") { section = ASSETS_SECTION_SPRITES; continue; };
-		if (line == "[ANIMATIONS]") { section = ASSETS_SECTION_ANIMATIONS; continue; };
-		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
-
-		//
-		// data section
-		//
-		switch (section)
-		{
-		case ASSETS_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
-		case ASSETS_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
-		}
-	}
-
-	f.close();
-
-	DebugOut(L"[INFO] Done loading assets from %s\n", assetFile);
 }
 
 void CWorldScene::Load()
@@ -239,18 +175,27 @@ void CWorldScene::Load()
 	{
 		string line(str);
 
-		if (line[0] == '#') continue;	// skip comment lines	
-		if (line == "[ASSETS]") { section = SCENE_SECTION_ASSETS; continue; };
-		if (line == "[OBJECTS]") { section = SCENE_SECTION_OBJECTS; continue; };
-		if (line == "[MAP]") { section = SCENE_SECTION_MAP; continue; };
+		if (line[0] == '#') continue;
+
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
+		if (line == "[MAP]") {
+			section = SCENE_SECTION_MAP; continue;
+		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
-		//
-		// data section
-		//
+
 		switch (section)
 		{
-		case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
 		}
@@ -268,9 +213,8 @@ void CWorldScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
-	vector<LPGAMEOBJECT> Mario;
 
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
@@ -278,21 +222,25 @@ void CWorldScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (Camera::GetInstance()->IsInCam(objects[i]->GetX(), objects[i]->GetY()) || dynamic_cast<CMario*>(objects[i]))
-			objects[i]->Update(dt, &coObjects);
+		objects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
 	// Update camera to follow mario
-	Camera::GetInstance()->Update(dt);
-	PurgeDeletedObjects();
+	/*Camera::GetInstance()->Update(dt);
+	PurgeDeletedObjects();*/
 }
 
 void CWorldScene::Render()
 {
 	map->Draw();
+
+	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Render();
+	}
 }
 
 /*
@@ -353,8 +301,25 @@ void CWorldSceneKeyHandler::KeyState(BYTE* states)
 
 void CWorldSceneKeyHandler::OnKeyDown(int KeyCode)
 {
+	CMiniMario* mario = (CMiniMario*)((LPWORLDSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+
 	switch (KeyCode)
 	{
+	case DIK_LEFT:
+		mario->GoLeft();
+		break;
+	case DIK_UP:
+		mario->GoTop();
+		break;
+	case DIK_RIGHT:
+		mario->GoRight();
+		break;
+	case DIK_DOWN:
+		mario->GoBottom();
+		break;
+	case DIK_S:
+		CGame::GetInstance()->SwitchScene(1);
+		break;
 	default:
 		break;
 	}

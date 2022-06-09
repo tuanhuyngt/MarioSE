@@ -162,7 +162,7 @@ void CTitleSceneKeyHandler::OnKeyDown(int KeyCode)
 		switch (((CTitleScene*)scence)->GetPlayType())
 		{
 		case ONE_PLAYER_TYPE:
-			CGame::GetInstance()->SwitchScene(1);
+			CGame::GetInstance()->SwitchScene(10);
 			break;
 		case TWO_PLAYER_TYPE:
 			break;

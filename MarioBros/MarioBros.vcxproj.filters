@@ -150,6 +150,12 @@
     <ClCompile Include="WorldScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Station.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMario.cpp">
+      <Filter>Mario</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -283,6 +289,12 @@
     </ClInclude>
     <ClInclude Include="WorldScene.h">
       <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Station.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMario.h">
+      <Filter>Mario</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
