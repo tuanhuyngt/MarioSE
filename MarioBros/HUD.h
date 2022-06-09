@@ -15,9 +15,9 @@
 #define ID_ANI_SPEEDSTACK_MAX_P	17072001
 
 
-#define HUD_X	126
-#define HUD_Y	216
-#define HUD_SPEED_STACK_Y	210
+#define HUD_X	128
+#define HUD_Y	214
+#define HUD_SPEED_STACK_Y	208
 #define HUD_START_SPEED_STACK_X	62.0f
 class HUD
 {

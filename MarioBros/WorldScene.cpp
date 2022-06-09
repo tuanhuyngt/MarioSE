@@ -241,6 +241,8 @@ void CWorldScene::Render()
 	{
 		objects[i]->Render();
 	}
+
+	HUD::GetInstance()->Draw();
 }
 
 /*
@@ -318,7 +320,7 @@ void CWorldSceneKeyHandler::OnKeyDown(int KeyCode)
 		mario->GoBottom();
 		break;
 	case DIK_S:
-		CGame::GetInstance()->SwitchScene(1);
+		CGame::GetInstance()->SwitchScene(ID_SCENE_1_1);
 		break;
 	default:
 		break;

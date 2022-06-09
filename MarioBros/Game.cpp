@@ -6,6 +6,7 @@
 
 #include "Texture.h"
 #include "Animations.h"
+#include "AssetIDs.h"
 #include "PlayScene.h"
 #include "TitleScene.h"
 #include "WorldScene.h"
@@ -462,10 +463,10 @@ void CGame::_ParseSection_SCENES(string line)
 	LPSCENE scene;
 	switch (id)
 	{
-	case 0:
+	case ID_SCENE_INTRO:
 		scene = new CTitleScene(id, path);
 		break;
-	case 10:
+	case ID_SCENE_WORLD:
 		scene = new CWorldScene(id, path);
 		break;
 	default:

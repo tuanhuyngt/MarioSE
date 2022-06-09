@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "Animations.h"
+#include "AssetIDs.h"
 #include "debug.h"
 
 #define SCENE_SECTION_UNKNOWN -1
@@ -162,7 +163,7 @@ void CTitleSceneKeyHandler::OnKeyDown(int KeyCode)
 		switch (((CTitleScene*)scence)->GetPlayType())
 		{
 		case ONE_PLAYER_TYPE:
-			CGame::GetInstance()->SwitchScene(10);
+			CGame::GetInstance()->SwitchScene(ID_SCENE_WORLD);
 			break;
 		case TWO_PLAYER_TYPE:
 			break;
