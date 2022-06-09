@@ -22,6 +22,7 @@
 #include "PiranhaPlant.h"
 #include "HUD.h"
 #include "LastItemObject.h"
+#include "Space.h"
 
 using namespace std;
 
@@ -45,7 +46,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 
 #define MAX_SCENE_LINE 1024
 
-Map* map;
+Map* mapMr;
 
 void CPlayScene::_ParseSection_SPRITES(string line)
 {
@@ -117,9 +118,9 @@ void CPlayScene::_ParseSection_MAP(string line) {
 	int tileHeight = atoi(tokens[7].c_str());
 	int checkWM = atoi(tokens[8].c_str());
 
-	map = new Map(IDtex, mapPath.c_str(), mapRow, mapColumn, tileRow, tileColumn, tileWidth, tileHeight);
-	if (checkWM != 0) map->IsWorldMap = true;
-	else map->IsWorldMap = false;
+	mapMr = new Map(IDtex, mapPath.c_str(), mapRow, mapColumn, tileRow, tileColumn, tileWidth, tileHeight);
+	if (checkWM != 0) mapMr->IsWorldMap = true;
+	else mapMr->IsWorldMap = false;
 }
 
 
@@ -248,6 +249,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	// General object setup
 	obj->SetPosition(x, y);
 
+	int column = CSpace::GetInstance()->GetColumnForObject(obj->GetX());
+	CSpace::GetInstance()->AddObjToColumn(obj, column);
 
 	objects.push_back(obj);
 }
@@ -329,7 +332,6 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-
 	vector<LPGAMEOBJECT> coObjects;
 	vector<LPGAMEOBJECT> Mario;
 
@@ -360,7 +362,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return; 
+	if (player == NULL) return;
 
 	// Update camera to follow mario
 	Camera::GetInstance()->Update(dt);
@@ -369,12 +371,14 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	map->Draw();
+	mapMr->Draw();
 
-	for (int i = 1; i < objects.size(); i++)
+	spaceObjects = CSpace::GetInstance()->GetObjectsInSpace(player->GetX());
+
+	for (int i = 1; i < spaceObjects.size(); i++)
 	{
-		if (!dynamic_cast<Pipe*>(objects[i]))
-			objects[i]->Render();
+		if (!dynamic_cast<Pipe*>(spaceObjects[i]))
+			spaceObjects[i]->Render();
 	}
 	objects[0]->Render();
 

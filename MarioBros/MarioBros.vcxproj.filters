@@ -31,6 +31,9 @@
     <Filter Include="Scenes">
       <UniqueIdentifier>{e8f90089-355f-4e09-b6ce-65fe018c3543}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Space">
+      <UniqueIdentifier>{4b6a2ff6-996d-4a02-870f-087b9a5cf74f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -155,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="MiniMario.cpp">
       <Filter>Mario</Filter>
+    </ClCompile>
+    <ClCompile Include="Space.cpp">
+      <Filter>Space</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="MiniMario.h">
       <Filter>Mario</Filter>
+    </ClInclude>
+    <ClInclude Include="Space.h">
+      <Filter>Space</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
