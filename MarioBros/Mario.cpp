@@ -51,6 +51,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		Camera::GetInstance()->GetMarioInfo(vx, vy, x, y, isOnPlatform, isFlying, IsInHiddenMap);
 
 		HandleMarioHoldingKoopas();
+
+		HandleMarioGoOutsiteMap();
+
 		for (int i = 0; i < coObjects->size(); i++)
 		{
 			if (CCollision::GetInstance()->CheckAABB(this, coObjects->at(i)))
@@ -1118,6 +1121,20 @@ void CMario::HandleMarioUntouchable()
 	{
 		untouchable_start = 0;
 		untouchable = 0;
+	}
+}
+
+void CMario::HandleMarioGoOutsiteMap()
+{
+	if (x - MARIO_BIG_BBOX_WIDTH / 2 <= 0)
+		x = MARIO_BIG_BBOX_WIDTH / 2;
+	else if (x + MARIO_BIG_BBOX_WIDTH / 2 >= 2816)
+	{
+		x = 2816 - MARIO_BIG_BBOX_WIDTH / 2;
+	}
+	if (y - MARIO_BIG_BBOX_HEIGHT / 2 < MARIO_BIG_BBOX_HEIGHT * 2)
+	{
+		y = MARIO_BIG_BBOX_HEIGHT / 2 + MARIO_BIG_BBOX_HEIGHT * 2;
 	}
 }
 

@@ -350,6 +350,7 @@ public:
 	void HandleMarioTransformRacoon();
 	void HandleMarioUntouchable();
 	void HandleMarioGoInHiddenMap(DWORD dt);
+	void HandleMarioGoOutsiteMap();
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
