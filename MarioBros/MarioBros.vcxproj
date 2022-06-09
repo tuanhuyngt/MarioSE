@@ -178,6 +178,7 @@
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="WorldScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -225,6 +226,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="WorldScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

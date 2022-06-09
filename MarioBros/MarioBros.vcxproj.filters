@@ -147,6 +147,9 @@
     <ClCompile Include="PlayScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="WorldScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -276,6 +279,9 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="PlayScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,0 +1,13 @@
+# list of object assets to load in this scene
+[ASSETS]
+
+#
+[OBJECTS]
+# See OBJECT_TYPE constants in AssetIDs.h
+
+#Platform
+#5	8	424	16	16	39	51000	52000	53000
+#5	632	408	16	16	29	51000	52000	53000
+
+[MAP]
+900000	Maps/SMB3_world_map_data.txt	16	16	4	11	16	16	0
