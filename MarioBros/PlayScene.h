@@ -9,6 +9,7 @@
 #include "Mushroom.h"
 #include "QuestionBrick.h"
 #include "Leaf.h"
+#include "Space.h"
 
 class CPlayScene: public CScene
 {
@@ -18,9 +19,14 @@ protected:
 
 	vector<LPGAMEOBJECT> objects;
 
-	vector<LPGAMEOBJECT> Pipes;
+	CSpace* space;
+	Unit* unit;
 
-	vector<LPGAMEOBJECT> spaceObjects;
+
+	vector<Unit*> listUnits;
+	vector<LPGAMEOBJECT> listObjects;
+
+	vector<LPGAMEOBJECT> Pipes;
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
@@ -59,6 +65,7 @@ public:
 					mushroom->SetState(MUSHROOOM_STATE_BEING_INNITED);
 					objects[index] = mushroom;
 					objects.push_back(QBrick);
+					unit = new Unit(space, mushroom, mushroom->GetX(), mushroom->GetY());
 				}
 				else
 				{
@@ -66,6 +73,7 @@ public:
 					leaf->SetState(LEAF_STATE_INNIT);
 					objects[index] = leaf;
 					objects.push_back(QBrick);
+					unit = new Unit(space, leaf, leaf->GetX(), leaf->GetY());
 				}
 			}
 			else
@@ -78,6 +86,8 @@ public:
 
 	void Clear();
 	void PurgeDeletedObjects();
+
+	void GetObjectFromGrid();
 
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
 };

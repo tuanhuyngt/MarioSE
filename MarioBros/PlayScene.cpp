@@ -22,7 +22,6 @@
 #include "PiranhaPlant.h"
 #include "HUD.h"
 #include "LastItemObject.h"
-#include "Space.h"
 
 using namespace std;
 
@@ -31,6 +30,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 {
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
+	space = new CSpace(3072, 688);
 }
 
 
@@ -46,7 +46,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 
 #define MAX_SCENE_LINE 1024
 
-Map* mapMr;
+Map* map;
 
 void CPlayScene::_ParseSection_SPRITES(string line)
 {
@@ -118,9 +118,9 @@ void CPlayScene::_ParseSection_MAP(string line) {
 	int tileHeight = atoi(tokens[7].c_str());
 	int checkWM = atoi(tokens[8].c_str());
 
-	mapMr = new Map(IDtex, mapPath.c_str(), mapRow, mapColumn, tileRow, tileColumn, tileWidth, tileHeight);
-	if (checkWM != 0) mapMr->IsWorldMap = true;
-	else mapMr->IsWorldMap = false;
+	map = new Map(IDtex, mapPath.c_str(), mapRow, mapColumn, tileRow, tileColumn, tileWidth, tileHeight);
+	if (checkWM != 0) map->IsWorldMap = true;
+	else map->IsWorldMap = false;
 }
 
 
@@ -156,24 +156,38 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GOOMBA: {
 		int goombaLevel = atoi(tokens[3].c_str());
 		obj = new CGoomba(x, y, goombaLevel);
+		unit = new Unit(space, obj, x, y);
 		break;
 	}
 	case OBJECT_TYPE_KOOPAS: {
 		int koopasLevel = atoi(tokens[3].c_str());
 		obj = new Koopas(x, y, koopasLevel);
+		unit = new Unit(space, obj, x, y);
 		break;
 	}
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_QUESTIONBRICK: {
 		int item = atoi(tokens[3].c_str());
 		obj = new QuestionBrick(x, y, item);
+		unit = new Unit(space, obj, x, y);
 		break;
 	}
-	case OBJECT_TYPE_FIREPIRANHAPLANT: {obj = new FirePiranhaPlant(x, y); break; }
-	case OBJECT_TYPE_PIRANHAPLANT: {obj = new PiranhaPlant(x, y); break; }
+	case OBJECT_TYPE_FIREPIRANHAPLANT:
+	{
+		obj = new FirePiranhaPlant(x, y);
+		unit = new Unit(space, obj, x, y);
+		break;
+	}
+	case OBJECT_TYPE_PIRANHAPLANT:
+	{
+		obj = new PiranhaPlant(x, y);
+		unit = new Unit(space, obj, x, y);
+		break;
+	}
 	case OBJECT_TYPE_INNIT_COIN: {
 		int type = atoi(tokens[3].c_str());
 		obj = new CCoin(x, y, type);
+		unit = new Unit(space, obj, x, y);
 		break;
 	}
 	case OBJECT_TYPE_PIPE: {
@@ -182,6 +196,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int type = atoi(tokens[5].c_str());
 		obj = new Pipe(x, y, width, height, type);
 		Pipes.push_back(obj);
+		unit = new Unit(space, obj, x, y);
 		break;
 	}
 	case OBJECT_TYPE_BREAKBLEBRICK: {
@@ -198,6 +213,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = Brkbrick;
 		}
 		else obj = new BreakableBrick(x, y, HaveButton);
+		unit = new Unit(space, obj, x, y);
 		break;
 	}
 	case OBJECT_TYPE_PLATFORM:
@@ -215,7 +231,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			cell_width, cell_height, length,
 			sprite_begin, sprite_middle, sprite_end
 		);
-
+		unit = new Unit(space, obj, x, y);
 		break;
 	}
 
@@ -225,19 +241,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		width = atoi(tokens[3].c_str());
 		height = atoi(tokens[4].c_str());
 		obj = new ColorBox(width, height);
+		unit = new Unit(space, obj, x, y);
 		break;
 	}
 
-	case OBJECT_TYPE_PORTAL:
-	{
-		float r = (float)atof(tokens[3].c_str());
-		float b = (float)atof(tokens[4].c_str());
-		int scene_id = atoi(tokens[5].c_str());
-		obj = new CPortal(x, y, r, b, scene_id);
-	}
 	case OBJECT_TYPE_LAST_ITEM:
 	{
 		obj = new LastItemObject(x, y);
+		unit = new Unit(space, obj, x, y);
 		break;
 	}
 
@@ -249,8 +260,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	// General object setup
 	obj->SetPosition(x, y);
 
-	int column = CSpace::GetInstance()->GetColumnForObject(obj->GetX());
-	CSpace::GetInstance()->AddObjToColumn(obj, column);
 
 	objects.push_back(obj);
 }
@@ -332,8 +341,11 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
+
 	vector<LPGAMEOBJECT> coObjects;
 	vector<LPGAMEOBJECT> Mario;
+
+	GetObjectFromGrid();
 
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -347,7 +359,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 	Mario.push_back(objects[0]);
 
-	for (size_t i = 0; i < objects.size(); i++)
+	/*for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (dynamic_cast<FirePiranhaPlant*>(objects[i]))
 		{
@@ -359,10 +371,24 @@ void CPlayScene::Update(DWORD dt)
 			if (Camera::GetInstance()->IsInCam(objects[i]->GetX(), objects[i]->GetY()) || dynamic_cast<CMario*>(objects[i]))
 				objects[i]->Update(dt, &coObjects);
 		}
+	}*/
+
+	for (size_t i = 0; i < listObjects.size(); i++)
+	{
+		if (dynamic_cast<FirePiranhaPlant*>(listObjects[i]))
+		{
+			FirePiranhaPlant* Fplant = dynamic_cast<FirePiranhaPlant*>(listObjects[i]);
+			Fplant->GetEnemyPos(player->GetX(), player->GetY());
+			listObjects[i]->Update(dt, &Mario);
+		}
+		else {
+			listObjects[i]->Update(dt, &coObjects);
+		}
 	}
+	player->Update(dt, &coObjects);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return;
+	if (player == NULL) return; 
 
 	// Update camera to follow mario
 	Camera::GetInstance()->Update(dt);
@@ -371,16 +397,26 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	mapMr->Draw();
+	map->Draw();
 
-	spaceObjects = CSpace::GetInstance()->GetObjectsInSpace(player->GetX());
-
-	for (int i = 1; i < spaceObjects.size(); i++)
+	/*for (int i = 1; i < objects.size(); i++)
 	{
-		if (!dynamic_cast<Pipe*>(spaceObjects[i]))
-			spaceObjects[i]->Render();
+		if (!dynamic_cast<Pipe*>(objects[i]))
+			objects[i]->Render();
 	}
 	objects[0]->Render();
+
+	for (int i = 0; i < Pipes.size(); i++)
+	{
+		Pipes[i]->Render();
+	}*/
+
+	for (int i = 0; i < listObjects.size(); i++)
+	{
+		if (!dynamic_cast<Pipe*>(listObjects[i]))
+			listObjects[i]->Render();
+	}
+	player->Render();
 
 	for (int i = 0; i < Pipes.size(); i++)
 	{
@@ -424,20 +460,41 @@ bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; 
 
 void CPlayScene::PurgeDeletedObjects()
 {
-	vector<LPGAMEOBJECT>::iterator it;
-	for (it = objects.begin(); it != objects.end(); it++)
-	{
-		LPGAMEOBJECT o = *it;
-		if (o->IsDeleted())
-		{
-			delete o;
-			*it = NULL;
-		}
-	}
+	//vector<LPGAMEOBJECT>::iterator it;
+	//for (it = objects.begin(); it != objects.end(); it++)
+	//{
+	//	LPGAMEOBJECT o = *it;
+	//	if (o->IsDeleted())
+	//	{
+	//		delete o;
+	//		*it = NULL;
+	//	}
+	//}
 
-	// NOTE: remove_if will swap all deleted items to the end of the vector
-	// then simply trim the vector, this is much more efficient than deleting individual items
-	objects.erase(
-		std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
-		objects.end());
+	//// NOTE: remove_if will swap all deleted items to the end of the vector
+	//// then simply trim the vector, this is much more efficient than deleting individual items
+	//objects.erase(
+	//	std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
+	//	objects.end());
+}
+
+void CPlayScene::GetObjectFromGrid()
+{
+	listUnits.clear();
+	listObjects.clear();
+
+	float camX;
+	float camY;
+
+	Camera::GetInstance()->GetCamPos(camX, camY);
+
+	space->Get(camX, camY, listUnits);
+
+	//DebugOut(L"%d \n", listUnits.size());
+
+	for (UINT i = 0; i < listUnits.size(); i++)
+	{
+		LPGAMEOBJECT obj = listUnits[i]->GetObj();
+		listObjects.push_back(obj);
+	}
 }
