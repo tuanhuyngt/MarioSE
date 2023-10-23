@@ -13,13 +13,297 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{15faa5fb-bc61-4be0-9d32-5e27d192c27b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{310686ef-2521-478d-a278-805ab8d89c4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies">
+      <UniqueIdentifier>{2e9431d7-6254-4885-879b-738d5a065aff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mario">
+      <UniqueIdentifier>{862358e2-23fb-42c0-be04-98a20a78681c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Items">
+      <UniqueIdentifier>{d60c5166-f5ec-4459-9003-c28aae6b13b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{e8f90089-355f-4e09-b6ce-65fe018c3543}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Space">
+      <UniqueIdentifier>{4b6a2ff6-996d-4a02-870f-087b9a5cf74f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Animations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Portal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SampleKeyEventHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprites.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Koopas.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Goomba.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipe.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FirePiranhaPlant.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="FireBullet.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Mario.cpp">
+      <Filter>Mario</Filter>
+    </ClCompile>
+    <ClCompile Include="MarioTail.cpp">
+      <Filter>Mario</Filter>
+    </ClCompile>
+    <ClCompile Include="Coin.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Mushroom.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestionBrick.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="PiranhaPlant.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableBrick.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableBrickEffect.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonP.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="LastItemObject.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Station.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMario.cpp">
+      <Filter>Mario</Filter>
+    </ClCompile>
+    <ClCompile Include="Space.cpp">
+      <Filter>Space</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Animations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetIDs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEventHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Portal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleKeyEventHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Koopas.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Goomba.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FirePiranhaPlant.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="FireBullet.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Mario.h">
+      <Filter>Mario</Filter>
+    </ClInclude>
+    <ClInclude Include="MarioTail.h">
+      <Filter>Mario</Filter>
+    </ClInclude>
+    <ClInclude Include="Coin.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Leaf.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestionBrick.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="PiranhaPlant.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableBrick.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableBrickEffect.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonP.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="LastItemObject.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Station.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMario.h">
+      <Filter>Mario</Filter>
+    </ClInclude>
+    <ClInclude Include="Space.h">
+      <Filter>Space</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

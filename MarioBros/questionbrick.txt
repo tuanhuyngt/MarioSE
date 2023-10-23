@@ -1,0 +1,17 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#HaveNoItem
+7001	235	188	251	204	40
+
+#HaveItem
+7002	157	188	173	204	40
+7003	176	188	192	204	40
+7004	196	188	212	204	40
+7005	215	188	231	204	40
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+#HaveNoItem
+70000	7001	100
+#HaveItem
+70001	7002	100	7003	100	7004	100	7005	100
